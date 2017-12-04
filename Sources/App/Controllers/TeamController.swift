@@ -8,6 +8,10 @@ public final class TeamController {
     }
     
     public func configureRoutes() {
-        
+        builder.get(handler: all)
+    }
+    
+    public func all(_ request: Request)throws -> ResponseRepresentable {
+        return try Team.all().makeJSON()
     }
 }
