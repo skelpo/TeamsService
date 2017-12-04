@@ -1,7 +1,7 @@
 import Fluent
 
 extension Team {
-    var members: Children<Team, Member> {
+    public var members: Children<Team, Member> {
         return children()
     }
 }
