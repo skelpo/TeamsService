@@ -17,4 +17,10 @@ public final class Member: Model {
         }
         self.init(userID: id, status: memberStatus)
     }
+    
+    public convenience init(row: Row) throws {
+        let id: Int = try row.get("user_id")
+        let status: Int = try row.get("status")
+        try self.init(userID: id, status: status)
+    }
 }
