@@ -1,3 +1,3 @@
 public enum MemberError: Error {
-    case undefinedMemberStatus
+    case undefinedMemberStatus(Int)
 }
