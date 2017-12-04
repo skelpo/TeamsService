@@ -1,10 +1,10 @@
 import FluentProvider
 
-public final class Member {
-    let storage: Storage = Storage()
+public final class Member: Model {
+    public let storage: Storage = Storage()
     
-    let userID: Int
-    let status: MemberStatus
+    public let userID: Int
+    public let status: MemberStatus
     
     public init(userID id: Int, status: MemberStatus) {
         self.userID = id
