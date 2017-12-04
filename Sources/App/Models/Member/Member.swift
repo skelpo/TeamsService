@@ -10,4 +10,11 @@ public final class Member {
         self.userID = id
         self.status = status
     }
+    
+    public convenience init(userID id: Int, status: Int = 1)throws {
+        guard let memberStatus = MemberStatus(rawValue: status) else {
+            throw MemberError.undefinedMemberStatus(status)
+        }
+        self.init(userID: id, status: memberStatus)
+    }
 }
