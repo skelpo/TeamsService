@@ -14,8 +14,6 @@ public final class TeamController {
         builder.post(handler: post)
         builder.get(Int.parameter, handler: getWithID)
         builder.delete(Int.parameter, handler: delete)
-        
-        MemberController(builder: builder).configureRoutes()
     }
     
     // MARK: - Route
