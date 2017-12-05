@@ -18,11 +18,7 @@ public final class MemberController {
     // MARK: - Routes
     
     public func post(_ request: Request)throws -> ResponseRepresentable {
-        guard let status = request.data["status"]?.int,
-            MemberStatus(rawValue: status) == .admin else {
-                throw Abort(.forbidden, reason: "User doers not have required privileges")
-        }
-        
+        try TeamController.assertAdmin(request)
         let teamID = try request.parameters.next(Int.self)
         guard let team = try Team.find(teamID) else {
             throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
@@ -44,10 +40,7 @@ public final class MemberController {
     }
     
     public func delete(_ request: Request)throws -> ResponseRepresentable {
-        guard let status = request.data["status"]?.int,
-            MemberStatus(rawValue: status) == .admin else {
-                throw Abort(.forbidden, reason: "User doers not have required privileges")
-        }
+        try TeamController.assertAdmin(request)
         let member = try memberAndTeam(from: request).member
         try member.delete()
         

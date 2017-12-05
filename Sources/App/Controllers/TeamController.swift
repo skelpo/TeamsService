@@ -46,10 +46,7 @@ public final class TeamController {
     }
     
     public func delete(_ request: Request)throws -> ResponseRepresentable {
-        guard let status = request.data["status"]?.int,
-            MemberStatus(rawValue: status) == .admin else {
-                throw Abort(.forbidden, reason: "User doers not have required privileges")
-        }
+        try TeamController.assertAdmin(request)
         let teamID = try request.parameters.next(Int.self)
         guard let team = try Team.find(teamID) else {
             throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
