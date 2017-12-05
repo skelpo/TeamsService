@@ -1,4 +1,5 @@
 import Vapor
+import HTTP
 
 public final class MemberController {
     public let team: RouteBuilder
@@ -48,7 +49,10 @@ public final class MemberController {
         try MemberTeam.makeQuery().filter("member_id", member.id).all().forEach({try $0.delete()})
         try member.delete()
         
-        return Response(status: .ok)
+        return try JSON(node: [
+            "status": Status.ok.statusCode,
+            "message": "Member with the ID '\(member.id?.wrapped.string ?? "null")' was deleted"
+            ])
     }
     
     // /users
