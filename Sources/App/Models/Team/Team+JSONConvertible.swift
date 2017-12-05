@@ -3,10 +3,10 @@ import JSON
 extension Team: JSONConvertible {
     public func makeJSON() throws -> JSON {
         var json = JSON()
-        let children: [Member] = try self.children().all()
+        let members: [Member] = try self.members.all()
         
         try json.set("name", self.name)
-        try json.set("members", children.makeJSON())
+        try json.set("members", members.makeJSON())
         return json
     }
     
