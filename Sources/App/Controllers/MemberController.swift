@@ -18,6 +18,7 @@ public final class MemberController {
     }
     
     // MARK: - Routes
+    // /teams
     
     public func post(_ request: Request)throws -> ResponseRepresentable {
         try TeamController.assertAdmin(request)
@@ -49,6 +50,10 @@ public final class MemberController {
         
         return Response(status: .ok)
     }
+    
+    // /users
+    
+    
     
     // MARK: - Helpers
     
