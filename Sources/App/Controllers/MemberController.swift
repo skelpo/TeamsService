@@ -1,18 +1,18 @@
 import Vapor
 
 public final class MemberController {
-    public let builder: RouteBuilder
+    public let team: RouteBuilder
     
     // MARK: - Configuration
     
     public init(builder: RouteBuilder) {
-        self.builder = builder.grouped(Int.parameter, "users")
+        self.team = builder.grouped(Int.parameter, "users")
     }
     
     public func configureRoutes() {
-        builder.get(Int.parameter, handler: get)
-        builder.post(handler: post)
-        builder.delete(Int.parameter, handler: delete)
+        team.get(Int.parameter, handler: get)
+        team.post(handler: post)
+        team.delete(Int.parameter, handler: delete)
     }
     
     // MARK: - Routes
