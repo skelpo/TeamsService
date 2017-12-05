@@ -6,13 +6,13 @@ public final class MemberController {
     // MARK: - Configuration
     
     public init(builder: RouteBuilder) {
-        self.builder = builder.grouped(Int.parameter, "users", Int.parameter)
+        self.builder = builder.grouped(Int.parameter, "users")
     }
     
     public func configureRoutes() {
-        builder.get(handler: get)
+        builder.get(Int.parameter, handler: get)
         builder.post(handler: post)
-        builder.delete(handler: delete)
+        builder.delete(Int.parameter, handler: delete)
     }
     
     // MARK: - Routes
