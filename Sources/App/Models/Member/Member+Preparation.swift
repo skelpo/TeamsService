@@ -6,7 +6,6 @@ extension Member: Preparation {
             member.id()
             member.int("user_id")
             member.int("status")
-            member.parent(Team.self)
         })
     }
     

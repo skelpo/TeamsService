@@ -5,7 +5,6 @@ extension Member: RowRepresentable {
         var row = Row()
         try row.set("user_id", self.userID)
         try row.set("status", self.status.rawValue)
-        try row.set(Team.foreignIdKey, teamID)
         return row
     }
 }
