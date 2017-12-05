@@ -35,7 +35,7 @@ public final class MemberController {
         try member.save()
         try team.members.add(member)
         
-        return Response(status: .ok)
+        return try member.makeJSON()
     }
     
     public func get(_ request: Request)throws -> ResponseRepresentable {
