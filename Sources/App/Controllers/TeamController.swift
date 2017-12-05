@@ -28,7 +28,7 @@ public final class TeamController {
         try team.save()
         try team.add(members: members)
         
-        return Response(status: .ok)
+        return try team.makeJSON()
     }
     
     public func all(_ request: Request)throws -> ResponseRepresentable {
