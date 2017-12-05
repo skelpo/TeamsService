@@ -5,6 +5,7 @@ extension Team: JSONConvertible {
         var json = JSON()
         let members: [Member] = try self.members.all()
         
+        try json.set("id", self.id?.wrapped)
         try json.set("name", self.name)
         try json.set("members", members.makeJSON())
         return json
