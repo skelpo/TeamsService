@@ -11,6 +11,7 @@ public final class TeamController {
     
     public func configureRoutes() {
         builder.get(handler: all)
+        builder.post(handler: post)
         builder.get(Int.parameter, handler: getWithID)
         builder.delete(Int.parameter, handler: delete)
         
@@ -18,6 +19,19 @@ public final class TeamController {
     }
     
     // MARK: - Route
+    
+    public func post(_ request: Request)throws -> ResponseRepresentable {
+        try TeamController.assertAdmin(request)
+        guard let name = request.data["name"]?.string else {
+            throw Abort(.badRequest, reason: "Missing name paramater in request data")
+        }
+        let members = (request.data["members"]?.array ?? []).map({$0.int ?? -1})
+        let team = Team(name: name)
+        try team.save()
+        try team.add(members: members as [Int])
+        
+        return Response(status: .ok)
+    }
     
     public func all(_ request: Request)throws -> ResponseRepresentable {
         return try Team.all().makeJSON()
@@ -43,5 +57,14 @@ public final class TeamController {
         try team.delete()
         
         return Response(status: .ok)
+    }
+    
+    // MAR: - Helpers
+    
+    static public func assertAdmin(_ request: Request)throws {
+        guard let status = request.data["status"]?.int,
+            MemberStatus(rawValue: status) == .admin else {
+                throw Abort(.forbidden, reason: "User doers not have required privileges")
+        }
     }
 }
