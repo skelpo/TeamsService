@@ -5,8 +5,8 @@ public final class TeamController {
     
     // MARK: - Configuration
     
-    public init(drop: Droplet) {
-        self.builder = drop.grouped("teams").grouped(APIErrorMiddleware())
+    public init(builder: RouteBuilder) {
+        self.builder = builder.grouped("teams")
     }
     
     public func configureRoutes() {
