@@ -10,6 +10,8 @@ public final class TeamController {
     public func configureRoutes() {
         builder.get(handler: all)
         builder.get(Int.parameter, handler: getWithID)
+        
+        MemberController(builder: builder).configureRoutes()
     }
     
     public func all(_ request: Request)throws -> ResponseRepresentable {
