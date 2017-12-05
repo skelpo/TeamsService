@@ -39,7 +39,7 @@ public final class TeamController {
     public func getWithID(_ request: Request)throws -> ResponseRepresentable {
         let id = try request.parameters.next(Int.self)
         guard let team = try Team.find(id)?.makeJSON() else {
-            throw Abort(.badRequest, reason: "No team exists with the id of '\(id)'")
+            throw Abort(.notFound, reason: "No team exists with the id of '\(id)'")
         }
         return team
     }
@@ -48,7 +48,7 @@ public final class TeamController {
         try TeamController.assertAdmin(request)
         let teamID = try request.parameters.next(Int.self)
         guard let team = try Team.find(teamID) else {
-            throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
+            throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
         try MemberTeam.makeQuery().filter("team_id", team.id).all().forEach({try $0.delete()})
         try team.delete()

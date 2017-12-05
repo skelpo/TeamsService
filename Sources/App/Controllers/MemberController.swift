@@ -28,7 +28,7 @@ public final class MemberController {
         try TeamController.assertAdmin(request)
         let teamID = try request.parameters.next(Int.self)
         guard let team = try Team.find(teamID) else {
-            throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
+            throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
         guard let newStatus = request.data["new_status"]?.int,
               let userID = request.data["user_id"]?.int else {
@@ -80,10 +80,10 @@ public final class MemberController {
         let memberID = try request.parameters.next(Int.self)
         
         guard let team = try Team.find(teamID) else {
-            throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
+            throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
         guard let member = try team.members.find(memberID) else {
-            throw Abort(.badRequest, reason: "No member with the ID of '\(memberID)' exists in the specified team")
+            throw Abort(.notFound, reason: "No member with the ID of '\(memberID)' exists in the specified team")
         }
         return (member: member, team: team)
     }
