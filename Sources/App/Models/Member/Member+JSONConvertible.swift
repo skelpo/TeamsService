@@ -12,7 +12,6 @@ extension Member: JSONConvertible {
     public convenience init(json: JSON) throws {
         let id: Int = try json.get("user_id")
         let status: Int = try json.get("status")
-        let teamID: Int = try json.get("team_id")
         try self.init(userID: id, status: status)
     }
 }
