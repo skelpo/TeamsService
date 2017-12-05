@@ -42,6 +42,7 @@ public final class MemberController {
     public func delete(_ request: Request)throws -> ResponseRepresentable {
         try TeamController.assertAdmin(request)
         let member = try memberAndTeam(from: request).member
+        try MemberTeam.makeQuery().filter("member_id", member.id).all().forEach({try $0.delete()})
         try member.delete()
         
         return Response(status: .ok)
