@@ -18,6 +18,7 @@ public final class MemberController {
         team.delete(Int.parameter, handler: delete)
         
         user.get(handler: users)
+        user.get(Int.parameter, "teams", handler: teams)
     }
     
     // MARK: - Routes
@@ -61,6 +62,15 @@ public final class MemberController {
     
     public func users(_ request: Request)throws -> ResponseRepresentable {
         return try Member.all().makeJSON()
+    }
+    
+    public func teams(_ request: Request)throws -> ResponseRepresentable {
+        let memberID = try request.parameters.next(Int.self)
+        guard let member = try Member.find(memberID) else {
+            throw Abort(.notFound, reason: "No user exists with the ID of '\(memberID)'")
+        }
+        
+        return try member.teams.all().makeJSON()
     }
     
     // MARK: - Helpers
