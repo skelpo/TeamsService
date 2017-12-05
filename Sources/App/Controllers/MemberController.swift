@@ -6,4 +6,8 @@ public final class MemberController {
     public init(builder: RouteBuilder) {
         self.builder = builder.grouped("users")
     }
+    
+    public func configureRoutes() {
+        
+    }
 }
