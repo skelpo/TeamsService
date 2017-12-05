@@ -28,7 +28,7 @@ public final class TeamController {
         let members = (request.data["members"]?.array ?? []).map({$0.int ?? -1})
         let team = Team(name: name)
         try team.save()
-        try team.add(members: members as [Int])
+        try team.add(members: members)
         
         return Response(status: .ok)
     }
