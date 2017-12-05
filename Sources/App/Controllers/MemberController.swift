@@ -2,11 +2,13 @@ import Vapor
 
 public final class MemberController {
     public let team: RouteBuilder
+    public let user: RouteBuilder
     
     // MARK: - Configuration
     
     public init(builder: RouteBuilder) {
-        self.team = builder.grouped(Int.parameter, "users")
+        self.team = builder.grouped("teams", Int.parameter, "users")
+        self.user = builder.grouped("users")
     }
     
     public func configureRoutes() {
