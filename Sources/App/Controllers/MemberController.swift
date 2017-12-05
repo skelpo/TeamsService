@@ -11,10 +11,33 @@ public final class MemberController {
     
     public func configureRoutes() {
         builder.get(Int.parameter, handler: get)
+        builder.post(Int.parameter, handler: post)
         builder.delete(Int.parameter, handler: delete)
     }
     
     // MARK: - Routes
+    
+    public func post(_ request: Request)throws -> ResponseRepresentable {
+        guard let status = request.data["status"]?.int,
+            MemberStatus(rawValue: status) == .admin else {
+                throw Abort(.forbidden, reason: "User doers not have required privileges")
+        }
+        
+        let teamID = try request.parameters.next(Int.self)
+        guard let team = try Team.find(teamID) else {
+            throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
+        }
+        guard let newStatus = request.data["new_status"]?.int,
+              let userID = request.data["user_id"]?.int else {
+                throw Abort(.badRequest, reason: "Missing status or user ID for new member")
+        }
+        
+        let member = try Member(userID: userID, status: newStatus)
+        try member.save()
+        try team.members.add(member)
+        
+        return Response(status: .ok)
+    }
     
     public func get(_ request: Request)throws -> ResponseRepresentable {
         return try memberAndTeam(from: request).member.makeJSON()
