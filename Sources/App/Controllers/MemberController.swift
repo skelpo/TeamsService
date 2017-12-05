@@ -16,6 +16,8 @@ public final class MemberController {
         team.get(Int.parameter, handler: get)
         team.post(handler: post)
         team.delete(Int.parameter, handler: delete)
+        
+        user.get(handler: users)
     }
     
     // MARK: - Routes
@@ -57,7 +59,9 @@ public final class MemberController {
     
     // /users
     
-    
+    public func users(_ request: Request)throws -> ResponseRepresentable {
+        return try Member.all().makeJSON()
+    }
     
     // MARK: - Helpers
     
