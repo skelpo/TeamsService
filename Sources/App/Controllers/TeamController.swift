@@ -51,6 +51,7 @@ public final class TeamController {
         guard let team = try Team.find(teamID) else {
             throw Abort(.badRequest, reason: "No team exists with the ID of '\(teamID)'")
         }
+        try MemberTeam.makeQuery().filter("team_id", team.id).all().forEach({try $0.delete()})
         try team.delete()
         
         return Response(status: .ok)
