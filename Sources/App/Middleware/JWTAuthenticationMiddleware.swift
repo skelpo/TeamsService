@@ -2,6 +2,7 @@ import Vapor
 import HTTP
 import JWTProvider
 import JWT
+import AuthProvider
 
 public final class JWTAuthenticationMiddleware: Middleware {
     private(set) var signers: SignerMap
@@ -23,20 +24,19 @@ public final class JWTAuthenticationMiddleware: Middleware {
     
     private func signer(for jwt: JWT) throws -> Signer {
         guard let kid = jwt.keyIdentifier else {
-            // The token doesn't include a kid
             throw JWTProviderError.noVerifiedJWT
         }
         
-        // We don't have any signer cached with that kid, but we have a jwks url
-        // Get remote jwks.json
+        if let signer = self.signers[kid] {
+            return signer
+        }
+        
         guard let jwks = try self.client.get(url).json else {
             throw JWTProviderError.noJWTSigner
         }
         
-        // Update cache
         self.signers = try SignerMap(jwks: jwks)
         
-        // Search again
         guard let signer = self.signers[kid] else {
             throw JWTProviderError.noJWTSigner
         }
