@@ -19,7 +19,11 @@ public final class JWTAuthenticationMiddleware: Middleware {
     }
     
     public func respond(to request: Request, chainingTo next: Responder) throws -> Response {
-        return Response(status: .ok)
+        let jwt = try request.parseJWT()
+        let signer = try self.signer(for: jwt)
+        _ = try request.jwt(verifyUsing: signer, and: claims)
+        
+        return try next.respond(to: request)
     }
     
     private func signer(for jwt: JWT) throws -> Signer {
