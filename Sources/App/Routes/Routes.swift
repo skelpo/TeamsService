@@ -1,6 +1,8 @@
 import Vapor
 import JWTProvider
 import JWT
+import AuthMiddleware
+import APIMiddleware
 
 extension Droplet {
     func setupRoutes() throws {
