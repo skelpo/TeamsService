@@ -8,9 +8,9 @@ extension Droplet {
             fatalError("Missing 'jwks_url' value in app config")
         }
         let expirationClaim = ExpirationTimeClaim()
-        let jwtMiddleware = PayloadAuthenticationMiddleware<Member>(jwkUrl, [expirationClaim], Member.self)
+        let memberMiddleware = PayloadAuthenticationMiddleware<Member>(jwkUrl, [expirationClaim], Member.self)
         
-        let api = self.grouped(APIErrorMiddleware(), jwtMiddleware)
+        let api = self.grouped(APIErrorMiddleware(), memberMiddleware)
         
         TeamController(builder: api).configureRoutes()
         MemberController(builder: api).configureRoutes()
