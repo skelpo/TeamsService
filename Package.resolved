@@ -218,6 +218,15 @@
         }
       },
       {
+        "package": "SkelpoMiddleware",
+        "repositoryURL": "https://github.com/Skelpo/SkelpoMiddleware.git",
+        "state": {
+          "branch": null,
+          "revision": "4d12021deadf2855b37497edf6877f843b33d640",
+          "version": "1.0.0"
+        }
+      },
+      {
         "package": "Sockets",
         "repositoryURL": "https://github.com/vapor/sockets.git",
         "state": {
