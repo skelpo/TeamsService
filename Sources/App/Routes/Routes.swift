@@ -7,10 +7,8 @@ extension Droplet {
         guard let jwkUrl: String = self.config["app", "jwks_url"]?.string else {
             fatalError("Missing 'jwks_url' value in app config")
         }
-        let expirationClaim = ExpirationTimeClaim()
-        let memberMiddleware = PayloadAuthenticationMiddleware<Member>(jwkUrl, [expirationClaim], Member.self)
         
-        let api = self.grouped(APIErrorMiddleware(), memberMiddleware)
+        let api = self.grouped(APIErrorMiddleware(), JWTAuthenticationMiddleware(url: jwkUrl, claims: [ExpirationTimeClaim()]))
         
         TeamController(builder: api).configureRoutes()
         MemberController(builder: api).configureRoutes()
