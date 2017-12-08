@@ -66,9 +66,9 @@ public final class MemberController {
     }
     
     public func teams(_ request: Request)throws -> ResponseRepresentable {
-        let memberID = try request.parameters.next(Int.self)
-        guard let member = try Member.find(memberID) else {
-            throw Abort(.notFound, reason: "No user exists with the ID of '\(memberID)'")
+        let userID = try request.parameters.next(Int.self)
+        guard let member = try Member.makeQuery().filter("user_id", userID).first() else {
+            throw Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
         }
         
         return try member.teams.all().makeJSON()
