@@ -19,6 +19,7 @@ public final class MemberController {
         
         user.get(handler: users)
         user.get(Int.parameter, "teams", handler: teams)
+        user.get(Int.parameter, "member-id", handler: memberID)
     }
     
     // MARK: - Routes
@@ -71,6 +72,21 @@ public final class MemberController {
         }
         
         return try member.teams.all().makeJSON()
+    }
+    
+    public func memberID(_ request: Request)throws -> ResponseRepresentable {
+        let userID = try request.parameters.next(Int.self)
+        guard let member = try Member.makeQuery().filter("user_id", userID).first() else {
+            throw Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
+        }
+        guard let memberID = member.id?.wrapped.int else {
+            throw Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
+        }
+        
+        return try JSON(node: [
+                "member_id": memberID,
+                "member": member
+            ])
     }
     
     // MARK: - Helpers
