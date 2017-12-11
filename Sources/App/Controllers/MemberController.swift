@@ -35,11 +35,15 @@ public final class MemberController {
               let userID = request.data["user_id"]?.int else {
                 throw Abort(.badRequest, reason: "Missing status or user ID for new member")
         }
+        let member: Member
         
-        let member = try Member(userID: userID, status: newStatus)
-        try member.save()
+        if let found = try Member.makeQuery().filter("user_id", userID).first() {
+            member = found
+        } else {
+            member = try Member(userID: userID, status: newStatus)
+        }
+        
         try team.members.add(member)
-        
         return try member.makeJSON()
     }
     
