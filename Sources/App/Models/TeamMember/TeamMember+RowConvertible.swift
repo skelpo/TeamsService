@@ -16,6 +16,6 @@ extension TeamMember: RowConvertible {
         let teamID: Int = try row.get("team_id")
         let status: Int = try row.get("status")
         
-        self.init(userID: userID, teamID: teamID, status: status)
+        try self.init(userID: userID, teamID: teamID, status: status)
     }
 }

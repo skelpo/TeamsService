@@ -20,6 +20,6 @@ extension TeamMember: JSONConvertible {
         let teamID: Int = try json.get("team_id")
         let status: Int = try json.get("status")
         
-        self.init(userID: userID, teamID: teamID, status: status)
+        try self.init(userID: userID, teamID: teamID, status: status)
     }
 }
