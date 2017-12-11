@@ -71,11 +71,11 @@ public final class MemberController {
     
     public func teams(_ request: Request)throws -> ResponseRepresentable {
         let userID = try request.parameters.next(Int.self)
-        guard let member = try Member.makeQuery().filter("user_id", userID).first() else {
+        guard let member = try TeamMember.makeQuery().filter("user_id", userID).first() else {
             throw Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
         }
         
-        return try member.teams.all().makeJSON()
+        return try member.teams().all().makeJSON()
     }
     
     public func memberID(_ request: Request)throws -> ResponseRepresentable {
