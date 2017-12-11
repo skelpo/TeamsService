@@ -1,8 +1,8 @@
 import Fluent
 
 extension Team {
-    public var members: Siblings<Team, Member, Pivot<Team, Member>> {
-        return siblings()
+    public func members()throws -> Query<TeamMember> {
+        return try TeamMember.makeQuery().filter("team_id", self.id)
     }
     
     public func add(members: [Int])throws {
