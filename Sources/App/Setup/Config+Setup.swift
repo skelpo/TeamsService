@@ -25,5 +25,6 @@ extension Config {
     /// schemas prepared before the app boots
     private func setupPreparations() throws {
         preparations.append(Team.self)
+        preparations.append(TeamMember.self)
     }
 }
