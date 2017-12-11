@@ -66,7 +66,7 @@ public final class MemberController {
     // /users
     
     public func users(_ request: Request)throws -> ResponseRepresentable {
-        return try Member.all().makeJSON()
+        return try TeamMember.all().makeJSON()
     }
     
     public func teams(_ request: Request)throws -> ResponseRepresentable {
