@@ -24,10 +24,8 @@ public final class TeamController {
         guard let name = request.data["name"]?.string else {
             throw Abort(.badRequest, reason: "Missing name paramater in request data")
         }
-        let members = (request.data["members"]?.array ?? []).map({$0.int ?? -1})
         let team = Team(name: name)
         try team.save()
-        try team.add(members: members)
         
         return try team.makeJSON()
     }
