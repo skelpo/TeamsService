@@ -1,6 +1,6 @@
 import FluentProvider
 
-public final class TeamMember {
+public final class TeamMember: Model {
     public let storage: Storage = Storage()
     
     public let userID: Int
