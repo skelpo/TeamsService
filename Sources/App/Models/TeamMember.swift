@@ -12,4 +12,10 @@ public final class TeamMember {
         self.teamID = teamID
         self.status = status
     }
+    
+    public init(userID: Int, teamID: Int, status: MemberStatus) {
+        self.userID = userID
+        self.teamID = teamID
+        self.status = status.rawValue
+    }
 }
