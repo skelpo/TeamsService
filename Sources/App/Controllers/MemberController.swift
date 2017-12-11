@@ -79,14 +79,14 @@ public final class MemberController {
     
     // MARK: - Helpers
     
-    public func memberAndTeam(from request: Request)throws -> (member: Member, team: Team) {
+    public func memberAndTeam(from request: Request)throws -> (member: TeamMember, team: Team) {
         let teamID = try request.parameters.next(Int.self)
         let memberID = try request.parameters.next(Int.self)
         
         guard let team = try Team.find(teamID) else {
             throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
-        guard let member = try team.members.find(memberID) else {
+        guard let member = try team.members().find(memberID) else {
             throw Abort(.notFound, reason: "No member with the ID of '\(memberID)' exists in the specified team")
         }
         return (member: member, team: team)
