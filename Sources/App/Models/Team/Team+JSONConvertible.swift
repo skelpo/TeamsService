@@ -3,7 +3,7 @@ import JSON
 extension Team: JSONConvertible {
     public func makeJSON() throws -> JSON {
         var json = JSON()
-        let members: [Member] = try self.members.all()
+        let members: [TeamMember] = try self.members().all()
         
         try json.set("id", self.id?.wrapped)
         try json.set("name", self.name)
