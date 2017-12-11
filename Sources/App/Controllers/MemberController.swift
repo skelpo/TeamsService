@@ -53,12 +53,11 @@ public final class MemberController {
     public func delete(_ request: Request)throws -> ResponseRepresentable {
         try TeamController.assertAdmin(request)
         let member = try memberAndTeam(from: request).member
-        try MemberTeam.makeQuery().filter("member_id", member.id).all().forEach({try $0.delete()})
         try member.delete()
         
         return try JSON(node: [
             "status": Status.ok.statusCode,
-            "message": "Member with the ID '\(member.id?.wrapped.string ?? "null")' was deleted"
+            "message": "Member with the ID '\(member.id?.wrapped.string ?? "null")' was removed from team"
             ])
     }
     
