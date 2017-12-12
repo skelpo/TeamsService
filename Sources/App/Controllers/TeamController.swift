@@ -23,10 +23,17 @@ public final class TeamController {
     public func post(_ request: Request)throws -> ResponseRepresentable {
         try TeamController.assertAdmin(request)
         guard let name = request.data["name"]?.string else {
-            throw Abort(.badRequest, reason: "Missing name paramater in request data")
+            throw Abort(.badRequest, reason: "Missing 'name' paramater in request data")
         }
         let team = Team(name: name)
         try team.save()
+        
+        guard let teamID = team.id?.wrapped.int else {
+            throw Abort(.internalServerError, reason: "Team was not saved to the database")
+        }
+        let userID: Int = try request.payload().get("id")
+        let member = TeamMember(userID: userID, teamID: teamID, status: .admin)
+        try member.save()
         
         return try team.makeJSON()
     }
