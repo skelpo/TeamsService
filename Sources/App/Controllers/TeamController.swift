@@ -46,6 +46,8 @@ public final class TeamController {
     
     public func getWithID(_ request: Request)throws -> ResponseRepresentable {
         let id = try request.parameters.next(Int.self)
+        try TeamController.assertTeam(id, with: request)
+        
         guard let team = try Team.find(id)?.makeJSON() else {
             throw Abort(.notFound, reason: "No team exists with the id of '\(id)'")
         }
