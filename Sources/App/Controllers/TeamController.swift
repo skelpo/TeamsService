@@ -60,10 +60,13 @@ public final class TeamController {
     
     // MAR: - Helpers
     
-    static public func assertTeam(_ team: Int, with request: Request)throws {
-        guard try request.teams().contains(team) else {
+    @discardableResult
+    static public func assertTeam(_ team: Int, with request: Request)throws -> [Int] {
+        let teams = try request.teams()
+        guard teams.contains(team) else {
             throw Abort(.notFound, reason: "Team not found for user")
         }
+        return teams
     }
     
     static public func assertAdmin(_ request: Request)throws {
