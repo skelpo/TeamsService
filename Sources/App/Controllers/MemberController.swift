@@ -27,6 +27,8 @@ public final class MemberController {
     public func post(_ request: Request)throws -> ResponseRepresentable {
         try TeamController.assertAdmin(request)
         let teamID = try request.parameters.next(Int.self)
+        try TeamController.assertTeam(teamID, with: request)
+        
         guard let _ = try Team.find(teamID) else {
             throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
@@ -76,6 +78,7 @@ public final class MemberController {
         let teamID = try request.parameters.next(Int.self)
         let memberID = try request.parameters.next(Int.self)
         
+        try TeamController.assertTeam(teamID, with: request)
         guard let team = try Team.find(teamID) else {
             throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
