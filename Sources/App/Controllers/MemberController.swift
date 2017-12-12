@@ -63,9 +63,8 @@ public final class MemberController {
         guard let member = try TeamMember.makeQuery().filter("user_id", userID).first() else {
             throw Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
         }
-        let teams = try request.teams()
         
-        return try member.teams().filter("id", in: teams).all().makeJSON()
+        return try member.teams().all().makeJSON()
     }
     
     // MARK: - Helpers
