@@ -13,7 +13,7 @@ let package = Package(
         .package(url: "https://github.com/vapor/fluent-provider.git", .upToNextMajor(from: "1.2.0")),
         .package(url: "https://github.com/vapor/mysql-provider.git", .exact("2.0.0")),
         .package(url: "https://github.com/vapor/jwt-provider.git", .exact("1.3.0")),
-        .package(url: "https://github.com/Skelpo/SkelpoMiddleware.git", .exact("1.2.3"))
+        .package(url: "https://github.com/Skelpo/SkelpoMiddleware.git", .exact("1.2.4"))
     ],
     targets: [
         .target(name: "App", dependencies: ["Vapor", "FluentProvider", "MySQLProvider", "JWTProvider", "SkelpoMiddleware"],
