@@ -58,7 +58,7 @@ public final class TeamController {
             ])
     }
     
-    // MAR: - Helpers
+    // MARK: - Helpers
     
     @discardableResult
     static public func assertTeam(_ team: Int, with request: Request)throws -> [Int] {
