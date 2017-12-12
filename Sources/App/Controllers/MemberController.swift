@@ -17,7 +17,6 @@ public final class MemberController {
         team.post(handler: post)
         team.delete(Int.parameter, handler: delete)
         
-        user.get(handler: users)
         user.get(Int.parameter, "teams", handler: teams)
     }
     
@@ -58,10 +57,6 @@ public final class MemberController {
     }
     
     // /users
-    
-    public func users(_ request: Request)throws -> ResponseRepresentable {
-        return try TeamMember.all().makeJSON()
-    }
     
     public func teams(_ request: Request)throws -> ResponseRepresentable {
         let userID = try request.parameters.next(Int.self)
