@@ -9,7 +9,7 @@ extension Droplet {
             fatalError("Missing 'jwks_url' value in app config")
         }
         
-        let api = self.grouped(APIErrorMiddleware(), TeamIDMiddleware(), JWTAuthenticationMiddleware(url: jwkUrl, claims: [ExpirationTimeClaim()]))
+        let api = self.grouped(APIErrorMiddleware(), JWTAuthenticationMiddleware(url: jwkUrl, claims: [ExpirationTimeClaim()]), TeamIDMiddleware())
         
         TeamController(builder: api).configureRoutes()
         MemberController(builder: api).configureRoutes()
