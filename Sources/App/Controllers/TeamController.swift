@@ -39,7 +39,9 @@ public final class TeamController {
     }
     
     public func all(_ request: Request)throws -> ResponseRepresentable {
-        return try Team.all().makeJSON()
+        let ids = try request.teams()
+        let teams = try Team.makeQuery().filter("id", in: ids).all()
+        return try teams.makeJSON()
     }
     
     public func getWithID(_ request: Request)throws -> ResponseRepresentable {
