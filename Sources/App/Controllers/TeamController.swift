@@ -1,5 +1,6 @@
 import Vapor
 import HTTP
+import SkelpoMiddleware
 
 public final class TeamController {
     let builder: RouteBuilder
@@ -58,6 +59,12 @@ public final class TeamController {
     }
     
     // MAR: - Helpers
+    
+    static public func assertTeam(_ team: Int, with request: Request)throws {
+        guard try request.teams().contains(team) else {
+            throw Abort(.notFound, reason: "Team not found for user")
+        }
+    }
     
     static public func assertAdmin(_ request: Request)throws {
         guard let status = request.data["status"]?.int,
