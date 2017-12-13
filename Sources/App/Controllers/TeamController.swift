@@ -8,7 +8,7 @@ public final class TeamController {
     // MARK: - Configuration
     
     public init(builder: RouteBuilder) {
-        self.builder = builder.grouped("teams")
+        self.builder = builder
     }
     
     public func configureRoutes() {

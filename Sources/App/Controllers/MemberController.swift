@@ -8,7 +8,7 @@ public final class MemberController {
     // MARK: - Configuration
     
     public init(builder: RouteBuilder) {
-        self.team = builder.grouped("teams", Int.parameter, "users")
+        self.team = builder.grouped(Int.parameter, "users")
         self.user = builder.grouped("users")
     }
     
