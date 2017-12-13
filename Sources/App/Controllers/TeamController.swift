@@ -12,6 +12,7 @@ public final class TeamController {
     }
     
     public func configureRoutes() {
+        builder.get(handler: health)
         builder.get(handler: all)
         builder.post(handler: post)
         builder.get(Int.parameter, handler: getWithID)
@@ -19,6 +20,10 @@ public final class TeamController {
     }
     
     // MARK: - Route
+    
+    public func health(_ request: Request)throws -> ResponseRepresentable {
+        return "all good"
+    }
     
     public func post(_ request: Request)throws -> ResponseRepresentable {
         try TeamController.assertAdmin(request)
