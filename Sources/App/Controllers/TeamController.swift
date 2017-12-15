@@ -67,7 +67,7 @@ public final class TeamController {
         guard let team = try Team.find(teamID) else {
             throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         }
-        try TeamMember.makeQuery().filter("team_id", team.id).delete()
+        try TeamMember.makeQuery().filter("teamId", team.id).delete()
         try team.delete()
         
         return try JSON(node: [
