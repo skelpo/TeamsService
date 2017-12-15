@@ -40,7 +40,10 @@ public final class TeamController {
         let member = TeamMember(userID: userID, teamID: teamID, status: .admin)
         try member.save()
         
-        return try team.makeJSON()
+        return try JSON(node: [
+                "message": "You should re-authenticate so you can access the team you just created",
+                "team": team
+            ])
     }
     
     public func all(_ request: Request)throws -> ResponseRepresentable {
