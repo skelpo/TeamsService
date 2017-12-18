@@ -83,15 +83,6 @@
         }
       },
       {
-        "package": "CryptoSwift",
-        "repositoryURL": "https://github.com/krzyzanowskim/CryptoSwift.git",
-        "state": {
-          "branch": null,
-          "revision": "d0084e4a6fe9490b3baab3d3c2aad58d3a852daf",
-          "version": "0.8.0"
-        }
-      },
-      {
         "package": "Debugging",
         "repositoryURL": "https://github.com/vapor/debugging.git",
         "state": {
@@ -231,7 +222,7 @@
         "repositoryURL": "https://github.com/Skelpo/SkelpoMiddleware.git",
         "state": {
           "branch": null,
-          "revision": "fe2fe5194a780f23f579464343ec771d5d3669e7",
+          "revision": "5ce2cad28b8ed01bbaa3972c69df4c0ec8060763",
           "version": "1.3.0"
         }
       },
