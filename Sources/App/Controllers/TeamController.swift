@@ -1,6 +1,7 @@
 import Vapor
 import HTTP
 import SkelpoMiddleware
+import Sessions
 
 public final class TeamController {
     let builder: RouteBuilder
@@ -39,6 +40,10 @@ public final class TeamController {
         let userID: Int = try request.payload().get("id")
         let member = TeamMember(userID: userID, teamID: teamID, status: .admin)
         try member.save()
+        
+        var teams = try request.teams()
+        teams.append(teamID)
+        try request.teams(teams)
         
         return try JSON(node: [
                 "message": "You should re-authenticate so you can access the team you just created",
