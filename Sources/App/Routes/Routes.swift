@@ -12,7 +12,7 @@ extension Droplet {
         let api = self.grouped(
             APIErrorMiddleware(),
             JWTAuthenticationMiddleware(url: jwkUrl, claims: [ExpirationTimeClaim()]),
-            TeamIDMiddleware(middlewares: self.middleware)
+            TeamIDMiddleware()
         ).grouped("teams")
         
         TeamController(builder: api).configureRoutes()
