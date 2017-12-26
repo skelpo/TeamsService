@@ -21,8 +21,8 @@ extension Droplet {
         ).grouped("teams")
         
         // Configure the routes in the `TeamController` and `MemberController` with the `api` route group.
-        // These use custom methods. There are other ways to do this.
-        try api.collection(TeamController())
+        // This method requires the controllers to conform to the `RouteCollection` and `EmptyInitializable` protocols.
+        try api.collection(TeamController.self)
         try api.collection(MemberController.self)
     }
 }

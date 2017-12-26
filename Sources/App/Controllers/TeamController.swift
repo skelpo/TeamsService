@@ -4,7 +4,10 @@ import SkelpoMiddleware
 import Sessions
 
 /// The route controller for interacting with the teams.
-public final class TeamController: RouteCollection {
+public final class TeamController: RouteCollection, EmptyInitializable {
+    
+    /// This initializer is here so the controller can conform to the `EmptyInitializable` protocol.
+    public init() {}
     
     // MARK: - Configuration
     
