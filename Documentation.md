@@ -19,13 +19,13 @@ Creates a new team, with the user as a member with the admin status.
 | --- | --- |
 | **name** | The name for the team |
 
---
+---
 
 ### GET `/teams`
 
 Gets all the teams that the user is a member of.
 
---
+---
 
 ### DELETE `/teams/:int`
 
@@ -43,7 +43,7 @@ Removes a user from a team.
 | --- | --- |
 | **0** | The ID of the user to remove |
 
---
+---
 
 ### GET `/teams/:int`
 
@@ -55,7 +55,7 @@ Gets a team.
 | --- | --- |
 | **0** | The ID of the team to get |
 
---
+---
 
 ### POST `/teams/:int/users`
 
@@ -75,7 +75,7 @@ Adds a user as a member to a team.
 | --- | --- |
 | **0** | The ID of the team to add the user to |
 
---
+---
 
 ### DELETE `/teams/:int/users/:int`
 
@@ -94,8 +94,18 @@ Removes a user from a team.
 | **0** | The ID of the team to remove the user from |
 | **1** | The ID of the user to remove the from the team |
 
---
+---
 
-**GET** `/teams/users/:int/teams`
+### GET `/teams/users/:int/teams`
 
-**GET** `/teams/health`
+Gets all the teams a user is a member of.
+
+**Route Parameters:**
+
+|     |     |
+| --- | --- |
+| **0** | The ID of the user to get the teams for |
+
+---
+
+### GET `/teams/health`
