@@ -60,7 +60,8 @@ final class TeamController: RouteCollection, EmptyInitializable {
         let member = TeamMember(userID: userID, teamID: teamID, status: .admin)
         try member.save()
         
-        // Save the teams the that the user is a member of in the sessions. This allows the user to access the team that was just create without getting a new access token.
+        // Save the teams the that the user is a member of in the sessions.
+        // This allows the user to access the team that was just create without getting a new access token.
         var teams = try request.teams()
         teams.append(teamID)
         try request.teams(teams)
