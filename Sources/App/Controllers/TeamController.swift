@@ -4,16 +4,16 @@ import SkelpoMiddleware
 import Sessions
 
 /// The route controller for interacting with the teams.
-public final class TeamController: RouteCollection, EmptyInitializable {
+final class TeamController: RouteCollection, EmptyInitializable {
     
     /// This initializer is here so the controller can conform to the `EmptyInitializable` protocol.
-    public init() {}
+    init() {}
     
     // MARK: - Configuration
     
     /// Used for adding the routes in a `RouteCollection` to a route builder.
     /// This method is called by the `routeBuilder.collection` method.
-    public func build(_ builder: RouteBuilder) throws {
+    func build(_ builder: RouteBuilder) throws {
         // Create a route at the path `/teams/health` using `.health` as the route handler.
         builder.get("health", handler: health)
         
@@ -33,12 +33,12 @@ public final class TeamController: RouteCollection, EmptyInitializable {
     // MARK: - Route
     
     /// The route used by the AWS E2C instance to check the health of the server.
-    public func health(_ request: Request)throws -> ResponseRepresentable {
+    func health(_ request: Request)throws -> ResponseRepresentable {
         return "all good"
     }
     
     /// The route handler for creating a new team.
-    public func post(_ request: Request)throws -> ResponseRepresentable {
+    func post(_ request: Request)throws -> ResponseRepresentable {
         // Get the name that will be for the new Team.
         guard let name = request.data["name"]?.string else {
             throw Abort(.badRequest, reason: "Missing 'name' paramater in request data")
@@ -73,7 +73,7 @@ public final class TeamController: RouteCollection, EmptyInitializable {
     }
     
     /// A route handler for getting all the teams a user belongs to.
-    public func all(_ request: Request)throws -> ResponseRepresentable {
+    func all(_ request: Request)throws -> ResponseRepresentable {
         // Get the IDs of the teams the user belongs to.
         let ids = try request.teams()
         
@@ -85,7 +85,7 @@ public final class TeamController: RouteCollection, EmptyInitializable {
     }
     
     /// A route handler for getting a team with a specefied ID.
-    public func getWithID(_ request: Request)throws -> ResponseRepresentable {
+    func getWithID(_ request: Request)throws -> ResponseRepresentable {
         // Get the ID of the team to get from the route parameters.
         let id = try request.parameters.next(Int.self)
         
@@ -102,7 +102,7 @@ public final class TeamController: RouteCollection, EmptyInitializable {
     }
     
     /// A route handler for deleting a team.
-    public func delete(_ request: Request)throws -> ResponseRepresentable {
+    func delete(_ request: Request)throws -> ResponseRepresentable {
         // Verify that the user tying to delete the team is an admin member in the team.
         try TeamController.assertAdmin(request)
         
@@ -138,7 +138,7 @@ public final class TeamController: RouteCollection, EmptyInitializable {
     /// - Returns: The teams contained in the request. This method is annotated with `@discardableResult`, so the returned value can be ignored.
     /// - Throws: `Abort(.notFound, reason: "Team not found for user")` if the IDs in the payload does not contain the ID passed in.
     @discardableResult
-    static public func assertTeam(_ team: Int, with request: Request)throws -> [Int] {
+    static func assertTeam(_ team: Int, with request: Request)throws -> [Int] {
         let teams = try request.teams()
         guard teams.contains(team) else {
             throw Abort(.notFound, reason: "Team not found for user")
@@ -150,7 +150,7 @@ public final class TeamController: RouteCollection, EmptyInitializable {
     ///
     /// - Parameter request: The request to get the status from.
     /// - Throws: `Abort(.forbidden, reason: "User doers not have required privileges")` if the status is missing or incorrect.
-    static public func assertAdmin(_ request: Request)throws {
+    static func assertAdmin(_ request: Request)throws {
         guard let status = request.data["status"]?.int,
             MemberStatus(rawValue: status) == .admin else {
                 throw Abort(.forbidden, reason: "User doers not have required privileges")
