@@ -2,7 +2,10 @@ import Vapor
 import HTTP
 
 /// The routes controller for interacting with team members.
-public final class MemberController: RouteCollection {
+public final class MemberController: RouteCollection, EmptyInitializable {
+    
+    /// This init method is so the `MemberController` can conform to the `EmptyInitializable` protocol.
+    public init() {}
     
     // MARK: - Configuration
     
