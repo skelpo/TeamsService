@@ -109,3 +109,5 @@ Gets all the teams a user is a member of.
 ---
 
 ### GET `/teams/health`
+
+Used by AWS to check whether the E2C instance needs to be re-booted.
