@@ -5,7 +5,7 @@ extension Team: RowRepresentable {
     
     /// Creates a `Row` from the model so Fluent can store the model in the database.
     /// Very rarely, if ever, will you have to call this method directly.
-    public func makeRow() throws -> Row {
+    func makeRow() throws -> Row {
         
         // Create a row, set the name property, and return it.
         var row = Row()
