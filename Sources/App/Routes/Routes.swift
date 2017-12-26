@@ -22,7 +22,7 @@ extension Droplet {
         
         // Configure the routes in the `TeamController` and `MemberController` with the `api` route group.
         // These use custom methods. There are other ways to do this.
-        TeamController(builder: api).configureRoutes()
+        try api.collection(TeamController())
         try api.collection(MemberController.self)
     }
 }

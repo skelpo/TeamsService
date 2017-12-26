@@ -4,22 +4,13 @@ import SkelpoMiddleware
 import Sessions
 
 /// The route controller for interacting with the teams.
-public final class TeamController {
-    
-    /// The route builder used for create routes at the path `/teams/...`.
-    let builder: RouteBuilder
+public final class TeamController: RouteCollection {
     
     // MARK: - Configuration
     
-    /// Creates an instance of the controller with a route builder.
-    ///
-    /// - parameter builder: Thr route builder used to creat routes with the controller methods.
-    public init(builder: RouteBuilder) {
-        self.builder = builder
-    }
-    
-    /// Configures the controller route methods with the route builder.
-    public func configureRoutes() {
+    /// Used for adding the routes in a `RouteCollection` to a route builder.
+    /// This method is called by the `routeBuilder.collection` method.
+    public func build(_ builder: RouteBuilder) throws {
         // Create a route at the path `/teams/health` using `.health` as the route handler.
         builder.get("health", handler: health)
         
