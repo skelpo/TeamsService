@@ -2,16 +2,16 @@ import Vapor
 import HTTP
 
 /// The routes controller for interacting with team members.
-public final class MemberController: RouteCollection, EmptyInitializable {
+final class MemberController: RouteCollection, EmptyInitializable {
     
     /// This init method is so the `MemberController` can conform to the `EmptyInitializable` protocol.
-    public init() {}
+    init() {}
     
     // MARK: - Configuration
     
     /// Used for adding the routes in a `RouteCollection` to a route builder.
     /// This method is called by the `routeBuilder.collection` method.
-    public func build(_ builder: RouteBuilder) throws {
+    func build(_ builder: RouteBuilder) throws {
         // The route builder for routes with the path `/teams/:int/users/...`
         let team = builder.grouped(Int.parameter, "users")
         
@@ -37,7 +37,7 @@ public final class MemberController: RouteCollection, EmptyInitializable {
     // /teams
     
     /// Adds a new member to a team.
-    public func post(_ request: Request)throws -> ResponseRepresentable {
+    func post(_ request: Request)throws -> ResponseRepresentable {
         // Verifiy that the user adding the member is a team admin.
         try TeamController.assertAdmin(request)
         
@@ -67,12 +67,12 @@ public final class MemberController: RouteCollection, EmptyInitializable {
     }
     
     /// Get a member for a team by its ID.
-    public func get(_ request: Request)throws -> ResponseRepresentable {
+    func get(_ request: Request)throws -> ResponseRepresentable {
         return try memberAndTeam(from: request).member.makeJSON()
     }
     
     /// Remove a member from a team.
-    public func delete(_ request: Request)throws -> ResponseRepresentable {
+    func delete(_ request: Request)throws -> ResponseRepresentable {
         
         // Verify that the user removing the member has an admin status in the team they are removing the member from.
         try TeamController.assertAdmin(request)
@@ -91,7 +91,7 @@ public final class MemberController: RouteCollection, EmptyInitializable {
     // /users
     
     /// Get all the teams the user is a member of.
-    public func teams(_ request: Request)throws -> ResponseRepresentable {
+    func teams(_ request: Request)throws -> ResponseRepresentable {
         
         // Get the ID of the user to get the teams for from the route path parameter.
         let userID = try request.parameters.next(Int.self)
@@ -110,7 +110,7 @@ public final class MemberController: RouteCollection, EmptyInitializable {
     /// Get the member and the team with the IDs in a route's parameters.
     ///
     /// - parameter request: The request with the route parameters to get the member and team.
-    public func memberAndTeam(from request: Request)throws -> (member: TeamMember, team: Team) {
+    func memberAndTeam(from request: Request)throws -> (member: TeamMember, team: Team) {
         // Get the team ID and member ID from the route parameters.
         let teamID = try request.parameters.next(Int.self)
         let memberID = try request.parameters.next(Int.self)
