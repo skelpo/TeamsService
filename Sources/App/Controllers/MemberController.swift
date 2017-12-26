@@ -2,26 +2,20 @@ import Vapor
 import HTTP
 
 /// The routes controller for interacting with team members.
-public final class MemberController {
-    
-    /// The route builder for routes with the path `/teams/:int/users/...`
-    public let team: RouteBuilder
-    
-    /// The route builder for routes with the path `/teams/users/...`
-    public let user: RouteBuilder
+public final class MemberController: RouteCollection {
     
     // MARK: - Configuration
     
-    /// Creates a instance of the controller with its route builders.
-    ///
-    /// - Parameter builder: The route builder used to create the `team` and `user` route builders.
-    public init(builder: RouteBuilder) {
-        self.team = builder.grouped(Int.parameter, "users")
-        self.user = builder.grouped("users")
-    }
-    
-    /// Adds the controller's routes to the route builders.
-    public func configureRoutes() {
+    /// Used for adding the routes in a `RouteCollection` to a route builder.
+    /// This method is called by the `routeBuilder.collection` method.
+    public func build(_ builder: RouteBuilder) throws {
+        // The route builder for routes with the path `/teams/:int/users/...`
+        let team = builder.grouped(Int.parameter, "users")
+        
+        // The route builder for routes with the path `/teams/users/...`
+        let user = builder.grouped("users")
+        
+        
         // Create a route at the path `/teams/:int/users/:int` using the `.get` method as the handler.
         team.get(Int.parameter, handler: get)
         
