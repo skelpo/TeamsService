@@ -4,7 +4,7 @@ import Fluent
 extension TeamMember: RowConvertible {
     
     /// Creates a `Row` from the model so Fluent can store it in the database.
-    public func makeRow() throws -> Row {
+    func makeRow() throws -> Row {
         // Create a row.
         var row = Row()
         
@@ -19,7 +19,7 @@ extension TeamMember: RowConvertible {
     
     /// Creates a model from a `Row`.
     /// This initializer is used to create an intance of the `TeamMember` model wih data stored in the database.
-    public convenience init(row: Row) throws {
+    convenience init(row: Row) throws {
         
         // Get the required data from the row
         let userID: Int = try row.get("userId")

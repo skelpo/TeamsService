@@ -1,6 +1,6 @@
 /// Represents the status a member can have in a team.
 /// The cases have a raw value type of `Int`.
-public enum MemberStatus: Int, CustomStringConvertible {
+enum MemberStatus: Int, CustomStringConvertible {
     
     /// Defines that the user is an admin in the team.
     /// An admin can add and remove users, and delete the team.
@@ -12,7 +12,7 @@ public enum MemberStatus: Int, CustomStringConvertible {
     case standard
     
     /// A string representation of the status ('admin' and 'standard').
-    public var description: String {
+    var description: String {
         switch self {
         case .admin: return "admin"
         case .standard: return "standard"

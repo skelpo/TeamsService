@@ -4,7 +4,7 @@ import JSON
 extension TeamMember: JSONConvertible {
     
     /// Creates a JSON representation of the model
-    public func makeJSON() throws -> JSON {
+    func makeJSON() throws -> JSON {
         
         // Create a JSON object and the name of the status that the member is.
         var json = JSON()
@@ -23,7 +23,7 @@ extension TeamMember: JSONConvertible {
     }
     
     /// Creates an instance of the `TeamMember` model with a JSON object.
-    public convenience init(json: JSON) throws {
+    convenience init(json: JSON) throws {
         
         // Get the neccesary inrofmation from the JSON.
         let userID: Int = try json.get("user_id")
