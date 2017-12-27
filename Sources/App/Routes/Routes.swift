@@ -18,7 +18,7 @@ extension Droplet {
             APIErrorMiddleware(),
             JWTAuthenticationMiddleware(url: jwkUrl, claims: [ExpirationTimeClaim()]),
             TeamIDMiddleware()
-        ).grouped("teams")
+        ).grouped("*", "teams")
         
         // Configure the routes in the `TeamController` and `MemberController` with the `api` route group.
         // This method requires the controllers to conform to the `RouteCollection` and `EmptyInitializable` protocols.
@@ -28,7 +28,7 @@ extension Droplet {
         // Create a route at the path `/teams/health` using a closure for the handler.
         // This route is used by the AWS E2C instance to check the health of the server.
         // We are registering the route here because we can't have it behind an authentication layer.
-        self.get("teams", "health") { request in
+        self.get("*", "teams", "health") { request in
             return "all good"
         }
     }
