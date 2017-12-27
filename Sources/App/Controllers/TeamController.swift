@@ -14,8 +14,6 @@ final class TeamController: RouteCollection, EmptyInitializable {
     /// Used for adding the routes in a `RouteCollection` to a route builder.
     /// This method is called by the `routeBuilder.collection` method.
     func build(_ builder: RouteBuilder) throws {
-        // Create a route at the path `/teams/health` using `.health` as the route handler.
-        builder.get("health", handler: health)
         
         // Create a route at the path `/teams` using `.all` as the route handler.
         builder.get(handler: all)
@@ -31,11 +29,6 @@ final class TeamController: RouteCollection, EmptyInitializable {
     }
     
     // MARK: - Route
-    
-    /// The route used by the AWS E2C instance to check the health of the server.
-    func health(_ request: Request)throws -> ResponseRepresentable {
-        return "all good"
-    }
     
     /// The route handler for creating a new team.
     func post(_ request: Request)throws -> ResponseRepresentable {

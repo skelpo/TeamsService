@@ -24,5 +24,12 @@ extension Droplet {
         // This method requires the controllers to conform to the `RouteCollection` and `EmptyInitializable` protocols.
         try api.collection(TeamController.self)
         try api.collection(MemberController.self)
+        
+        // Create a route at the path `/teams/health` using a closure for the handler.
+        // This route is used by the AWS E2C instance to check the health of the server.
+        // We are registering the route here because we can't have it behind an authentication layer.
+        self.get("teams", "health") { request in
+            return "all good"
+        }
     }
 }
