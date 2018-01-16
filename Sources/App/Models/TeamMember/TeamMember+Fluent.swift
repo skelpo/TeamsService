@@ -1,6 +1,6 @@
 import Fluent
 
-/// `TeamMember` model heplers for interacting with the `team_memberss` database table.
+/// `TeamMember` model helpers for interacting with the `team_members` database table.
 extension TeamMember {
     
     /// Create a query that gets all the teams that the member is a part of.
