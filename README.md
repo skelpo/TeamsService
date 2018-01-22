@@ -60,3 +60,22 @@ private func setupPreparations() throws {
     preparations.append(TeamModifier.self)
 }
 ```
+
+#### Routes
+
+All of the routes for the `Team` model are protected by authentication. The payload in the access token must contain an array called `team_ids`, which contains the IDs of the Teams the user is a member of.
+
+The routes for the `Team` model support all CRD operations (no, you can't update, but there isn't really anything _to_ update).
+
+- `POST /teams`: Creates a new team with a given name and the user that created it as a member with the Admin status.
+  
+  This route requires a `name` parameter in the request body, used as the `name` property of the `Team`.
+  
+- `GET /teams`: Gets all the teams that the currently authenticated user is a member of.
+  
+- `GET /teams/:int`: Gets the team with the ID route parameter that the user is a nenber of. If the team exists, but the user is not a member, the route will return a 404.
+
+
+- `DELETE /teams/:int`: Deletes the team with the given ID route parameter, along with all related member pivot connections.
+
+  This route requires `status` parameter in the request body, which will be an `Int`. This parameter is used to make sure an Admin member is deleting the team.
