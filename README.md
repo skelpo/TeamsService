@@ -79,3 +79,36 @@ The routes for the `Team` model support all CRD operations (no, you can't update
 - `DELETE /teams/:int`: Deletes the team with the given ID route parameter, along with all related member pivot connections.
 
   This route requires `status` parameter in the request body, which will be an `Int`. This parameter is used to make sure an Admin member is deleting the team.
+
+## Team Members
+
+The `TeamMember` is used to connect any model by its ID with a `team` model. A `TeamMember` database row will have an ID, the ID of the model it's connecting to the team (this is the `userID` property), the ID of the team the model is a member of (with the `teamID` property), and the status of the member in the team (with the `status` property), which can either be `admin` or `standard`. The `admin` status is represented by `0`, the `standard` status by `1`.
+
+#### Adding Properties
+
+You can add properties to the `TeamMember` model the same way you do for the `Team` model, Check out the [instructions above](https://github.com/skelpo/service-teams#adding-properties). Make sure you use the correct model if you modify the database.
+
+#### Routes
+
+Like the `Team` model, the routes for `TeamMember` supports create, read, and delete operations for the `TeamMembers` table.
+
+- `POST /*/teams/:int/members`: Adds a member to a team
+
+  This route requires three parameters in the request body:
+  - `status`: The status of the member adding the user. The route is configured so you must be an admin to add a user, but you can change that if you like
+  - `new_status`: The status of the member that is being added to the team.
+  - `user_id`: The ID of the model that the `TeamMember` connects to the team.
+  
+  The route path parameter is the team that the user is being added to.
+  
+- `GET /*/teams/:int/members`: Gets all the members of a team. The route parameter is the ID of the team to get the members for.
+
+- `GET /*/teams/:int/members/:int`: Gets a single user from a team. The first route parameter is the ID of the team to get the member from and the second is the ID of the member to get.
+
+- `DELETE /*/teams/:int/members/:int`: Removes a member from a team.
+
+  This route requires a `status` paremeter in the request body. This is the status of the member removing the other member from the team. The route is setup so only members with the `admin` status can remove another member.
+  
+  The first parameter for the route is the ID of the team to remove the member from and the second is the ID of the member to remove.
+  
+- `GET /teams/members/:int/teams`: Gets all the teams a member belongs to. The route parameter is the ID of the member to get the teams from.
