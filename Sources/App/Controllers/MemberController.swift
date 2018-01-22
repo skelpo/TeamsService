@@ -12,24 +12,26 @@ final class MemberController: RouteCollection, EmptyInitializable {
     /// Used for adding the routes in a `RouteCollection` to a route builder.
     /// This method is called by the `routeBuilder.collection` method.
     func build(_ builder: RouteBuilder) throws {
-        // The route builder for routes with the path `/teams/:int/users/...`
+        // The route builder for routes with the path `/teams/:int/members/...`
         let team = builder.grouped(Int.parameter, "members")
         
-        // The route builder for routes with the path `/teams/users/...`
+        // The route builder for routes with the path `/teams/members/...`
         let user = builder.grouped("member")
         
+        // Create a route at the path `/teams/:int/members` using the `.get` method as the handler.
+        team.get(handler: get)
         
-        // Create a route at the path `/teams/:int/users/:int` using the `.get` method as the handler.
+        // Create a route at the path `/teams/:int/members/:int` using the `.getById` method as the handler.
         team.get(Int.parameter, handler: getById)
         
-        // Create a route at the path `/teams/:int/users` using the `.post` method as the handler.
+        // Create a route at the path `/teams/:int/members` using the `.post` method as the handler.
         team.post(handler: post)
         
-        // Create a route at the path `/teams/:int/users/:int` using the `.delete` method as the handler.
+        // Create a route at the path `/teams/:int/members/:int` using the `.delete` method as the handler.
         team.delete(Int.parameter, handler: delete)
         
         
-        // Create a route at the path `/teams/users/:int/teams` using the `.teams` method as the handler.
+        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
         user.get(Int.parameter, "teams", handler: teams)
     }
     
@@ -64,6 +66,20 @@ final class MemberController: RouteCollection, EmptyInitializable {
         
         // Return the JSON from the new member.
         return try member.makeJSON()
+    }
+    
+    /// Gets all the members of a team.
+    func get(_ request: Request)throws -> ResponseRepresentable {
+        // Get the route parameter, which is the ID of the team we are getting the members from.
+        let id = try request.parameters.next(Int.self)
+        
+        // Get the team with the ID from the route. If the user doesn't exist, abort.
+        guard let team = try Team.find(id) else {
+            throw Abort(.notFound, reason: "No team exists with the ID of '\(id)'")
+        }
+        
+        // Return all the team's members, converted to JSON.
+        return try team.members().all().makeJSON()
     }
     
     /// Get a member for a team by its ID.
