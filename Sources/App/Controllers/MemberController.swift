@@ -13,10 +13,10 @@ final class MemberController: RouteCollection, EmptyInitializable {
     /// This method is called by the `routeBuilder.collection` method.
     func build(_ builder: RouteBuilder) throws {
         // The route builder for routes with the path `/teams/:int/users/...`
-        let team = builder.grouped(Int.parameter, "users")
+        let team = builder.grouped(Int.parameter, "members")
         
         // The route builder for routes with the path `/teams/users/...`
-        let user = builder.grouped("users")
+        let user = builder.grouped("member")
         
         
         // Create a route at the path `/teams/:int/users/:int` using the `.get` method as the handler.
