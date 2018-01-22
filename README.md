@@ -28,3 +28,35 @@ Your service is now ready to run!
 If you want to add more routes to your service, you can create another controller in the `Sources/App/Controllers` directory or simply add the routes to one of the existing controllers. If you do create you own controller, you can either conform to `RouteCollection` to register the routes, or setup your own method of doing it. After you have created all your routes, it is time to register them with a `RouteBuilder` instance. If the routes are protected, then you will want to register your controller with the `api` route builder; however, if your routes are public, then you can register them directly with the droplet or create a different route builder so you can leverage middleware with your routes.
 
 The routes for the service all start with a wildcard path element. This allows you to run multiple different versions of your API (with paths `/v1/...`, `/v2/...`, etc.) on AWS using the load balancer to figure out where to send the request to so we get the proper API version, while at the same time letting us ignore the version number (we don't need to know if it is correct or not because AWS takes care of that.)
+
+## Teams
+
+The `Team` model is nothing more then a name and ID, which a member connects to.
+
+#### Adding Properties
+
+You can add additional properties to the `Team` model if you want, though if the service is already running, they will have to be optional.
+
+Start by adding the property to the model, and to the Row and JSON methods for serialization. Then we need to prepare the database table, so it has the new columns. If you can wipe the database, or haven't created one yet, you can add the preparation directly to the User.prepare method. However, if you already have the service up and running, you will need to modify the current table. This can be done by creating a struct that conforms to `Preparation` and adding it to your config's preparations. It will look something like this:
+
+```swift
+struct TeamModifier: Preparation {
+    static func prepare(_ database: Database) throws {
+        try database.modify(Team.self) { team in
+            team.<type>("<COLUMN_NAME>", optional: nil, default: nil)
+        }
+    }
+
+    static func revert(_ database: Database) throws {}
+}
+```
+
+And this:
+
+```
+private func setupPreparations() throws {
+    // Other preparations...
+    // Add preparation in `Config.setupPreparations`.
+    preparations.append(TeamModifier.self)
+}
+```
