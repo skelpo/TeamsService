@@ -20,7 +20,7 @@ final class MemberController: RouteCollection, EmptyInitializable {
         
         
         // Create a route at the path `/teams/:int/users/:int` using the `.get` method as the handler.
-        team.get(Int.parameter, handler: get)
+        team.get(Int.parameter, handler: getById)
         
         // Create a route at the path `/teams/:int/users` using the `.post` method as the handler.
         team.post(handler: post)
@@ -67,7 +67,7 @@ final class MemberController: RouteCollection, EmptyInitializable {
     }
     
     /// Get a member for a team by its ID.
-    func get(_ request: Request)throws -> ResponseRepresentable {
+    func getById(_ request: Request)throws -> ResponseRepresentable {
         return try memberAndTeam(from: request).member.makeJSON()
     }
     
