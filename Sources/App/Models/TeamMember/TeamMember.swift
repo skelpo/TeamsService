@@ -1,7 +1,7 @@
 import FluentMySQL
 
 /// Represents a member for a team.
-final class TeamMember: Model {
+final class TeamMember: Content {
     
     /// The ID of the user that model represents.
     let userID: Int
