@@ -1,7 +1,7 @@
 import Routing
 import Vapor
 
-final class Router: RouteCollection {
+final class Routes: RouteCollection {
     let app: Application
 
     init(app: Application) {
