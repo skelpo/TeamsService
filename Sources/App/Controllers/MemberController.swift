@@ -1,6 +1,10 @@
 import Vapor
 import HTTP
 
+final class MemberController: RouteCollection {
+    func boot(router: Router) throws {}
+}
+
 ///// The routes controller for interacting with team members.
 //final class MemberController: RouteCollection, EmptyInitializable {
 //    
