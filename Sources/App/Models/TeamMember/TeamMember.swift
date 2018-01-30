@@ -47,6 +47,16 @@ final class TeamMember: Content {
         }
         self.init(userID: userID, teamID: teamID, status: memberStatus)
     }
+    
+    /// Create a `QueryBuilder` that gets all the teams that the member is a part of.
+    func teams()throws -> QueryBuilder<Team> {
+        
+        // Get all the IDs of the teams the user is part of.
+        let ids = try TeamMember.makeQuery().filter("userId", self.userID).all().map({ $0.teamID })
+        
+        // Get all the teams that have an ID in the `ids` array.
+        return try Team.makeQuery().filter("id", in: ids)
+    }
 }
 
 /// Conforms the `TeamMember` class to the `Model` protocol.
