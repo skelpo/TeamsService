@@ -1,5 +1,3 @@
-import JSON
-
 /// Conformes the `Team` model to `JSONConvertible`.
 extension Team: JSONConvertible {
     

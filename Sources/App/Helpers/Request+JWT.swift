@@ -1,6 +1,6 @@
 import HTTP
 import JWT
-import AuthProvider
+import Authentication
 
 /// `Request` helpers for getting data for JWT authentication.
 extension Request {

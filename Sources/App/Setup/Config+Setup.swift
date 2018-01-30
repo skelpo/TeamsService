@@ -1,7 +1,6 @@
-import FluentProvider
-import MySQLProvider
-import AuthProvider
-import JWTProvider
+import FluentMySQL
+import Authentication
+import JWT
 
 extension Config {
     public func setup() throws {

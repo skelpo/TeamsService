@@ -1,5 +1,4 @@
 import Vapor
-import JWTProvider
 import JWT
 import SkelpoMiddleware
 

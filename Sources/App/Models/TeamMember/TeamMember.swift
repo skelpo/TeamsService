@@ -1,4 +1,4 @@
-import FluentProvider
+import FluentMySQL
 
 /// Represents a member for a team.
 final class TeamMember: Model {

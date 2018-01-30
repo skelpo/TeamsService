@@ -1,4 +1,4 @@
-import FluentProvider
+import FluentMySQL
 
 /// Represents any kind of team.
 /// A JWT payload contains the Team IDs that a user is a member of.

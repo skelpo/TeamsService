@@ -1,7 +1,6 @@
 import Vapor
 import HTTP
 import SkelpoMiddleware
-import Sessions
 
 /// The route controller for interacting with the teams.
 final class TeamController: RouteCollection, EmptyInitializable {
