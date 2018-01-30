@@ -3,10 +3,6 @@ import FluentMySQL
 /// Represents a member for a team.
 final class TeamMember: Model {
     
-    /// Used by Fluent to store metadata for the model in the database.
-    let storage: Storage = Storage()
-    
-    
     /// The ID of the user that model represents.
     let userID: Int
     
