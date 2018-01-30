@@ -12,10 +12,4 @@ final class Team: Model {
     init(name: String) {
         self.name = name
     }
-    
-    /// Creates a team from a `Row`.
-    /// This initializer is used to create a team from information stored in a database.
-    init(row: Row) throws {
-        self.name = try row.get("name")
-    }
 }
