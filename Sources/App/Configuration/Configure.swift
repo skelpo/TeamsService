@@ -15,6 +15,5 @@ public func configure(
     services.register(dbConfig)
     
     var migirateConfig = MigrationConfig()
-    migirateConfig.add(model: Package.self, database: .mysql)
     services.register(migirateConfig)
 }
