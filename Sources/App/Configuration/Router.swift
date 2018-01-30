@@ -8,5 +8,7 @@ final class Routes: RouteCollection {
         self.app = app
     }
     
-    func boot(router: Router) throws {}
+    func boot(router: Router) throws {
+        try router.register(collection: MemberController())
+    }
 }
