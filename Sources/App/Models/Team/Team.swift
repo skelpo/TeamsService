@@ -17,6 +17,11 @@ final class Team: Content {
     init(name: String) {
         self.name = name
     }
+    
+    /// Creates a `QueryBuilder` that gets all the members that belong to the team.
+    func members()throws -> QueryBuilder<TeamMember> {
+        return try TeamMember.makeQuery().filter(\.teamID == self.id)
+    }
 }
 
 /// Conforms the `Team` class to the `Model` protocol.
