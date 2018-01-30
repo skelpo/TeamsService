@@ -32,3 +32,7 @@ extension Team: Model {
     /// The database type that is used to store the model.
     typealias Database = MySQLDatabase
 }
+
+/// Conforms the `Team` class to the `Model` protocol.
+/// This allows Fluent to create the table for the model in the database.
+extension Team: Migration {}
