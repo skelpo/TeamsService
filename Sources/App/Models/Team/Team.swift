@@ -4,9 +4,6 @@ import FluentMySQL
 /// A JWT payload contains the Team IDs that a user is a member of.
 final class Team: Model {
     
-    /// Used by Fluent to store metadata for the model in the database.
-    let storage: Storage = Storage()
-    
     /// The name of the team.
     let name: String
     
