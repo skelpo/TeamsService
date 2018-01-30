@@ -15,5 +15,7 @@ public func configure(
     services.register(dbConfig)
     
     var migirateConfig = MigrationConfig()
+    migirateConfig.add(model: Team.self, database: .mysql)
+    migirateConfig.add(model: TeamMember.self, database: .mysql)
     services.register(migirateConfig)
 }
