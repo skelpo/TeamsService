@@ -2,7 +2,7 @@ import FluentMySQL
 
 /// Represents any kind of team.
 /// A JWT payload contains the Team IDs that a user is a member of.
-final class Team: Model {
+final class Team: Content {
     
     /// The name of the team.
     let name: String
