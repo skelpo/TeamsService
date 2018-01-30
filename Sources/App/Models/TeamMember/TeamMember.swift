@@ -3,6 +3,11 @@ import FluentMySQL
 /// Represents a member for a team.
 final class TeamMember: Content {
     
+    /// The ID row that holds the representation of the model on the database
+    /// This property is a varible because Fluent has to be able to mutate it
+    /// (from `nil` to `n`).
+    var id: Int?
+    
     /// The ID of the user that model represents.
     let userID: Int
     
@@ -43,3 +48,4 @@ final class TeamMember: Content {
         self.init(userID: userID, teamID: teamID, status: memberStatus)
     }
 }
+
