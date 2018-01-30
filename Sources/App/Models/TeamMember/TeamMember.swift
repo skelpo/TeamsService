@@ -49,3 +49,15 @@ final class TeamMember: Content {
     }
 }
 
+/// Conforms the `TeamMember` class to the `Model` protocol.
+/// When you conform a class to `Model` in an extention,
+/// the class must already conform to `Codable`.
+extension TeamMember: Model {
+    // The key path to the model's `id` property.
+    static var idKey: ReferenceWritableKeyPath<TeamMember, Int?> {
+        return \.id
+    }
+    
+    /// The database type that is used to store the model.
+    typealias Database = MySQLDatabase
+}
