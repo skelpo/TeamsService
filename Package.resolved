@@ -69,16 +69,7 @@
         "repositoryURL": "https://github.com/vapor/fluent.git",
         "state": {
           "branch": "beta",
-          "revision": "b9c14ac1b80c5229bc61e42d0c1af87f2630abe2",
-          "version": null
-        }
-      },
-      {
-        "package": "FluentMySQL",
-        "repositoryURL": "https://github.com/vapor/mysql-driver.git",
-        "state": {
-          "branch": "beta",
-          "revision": "c15cd418d61d54c37fa067541fe1d8ba8dbc6bed",
+          "revision": "c34a4511c467b295bacbf9ad3555ca54f35015cb",
           "version": null
         }
       },
@@ -97,6 +88,15 @@
         "state": {
           "branch": "beta",
           "revision": "002049d5ebc8604160f2dc8c3a80d00c8a20ed75",
+          "version": null
+        }
+      },
+      {
+        "package": "FluentMySQL",
+        "repositoryURL": "https://github.com/vapor/mysql-driver.git",
+        "state": {
+          "branch": "beta",
+          "revision": "c15cd418d61d54c37fa067541fe1d8ba8dbc6bed",
           "version": null
         }
       },
@@ -128,20 +128,20 @@
         }
       },
       {
-        "package": "TLS",
-        "repositoryURL": "https://github.com/vapor/tls.git",
-        "state": {
-          "branch": "beta",
-          "revision": "fe597929aa17be0d76638c6704e7aeb2eada092e",
-          "version": null
-        }
-      },
-      {
         "package": "TemplateKit",
         "repositoryURL": "https://github.com/vapor/template-kit.git",
         "state": {
           "branch": "beta",
           "revision": "1ce8c2588ba7812bf904668b402f8f91076a33e6",
+          "version": null
+        }
+      },
+      {
+        "package": "TLS",
+        "repositoryURL": "https://github.com/vapor/tls.git",
+        "state": {
+          "branch": "beta",
+          "revision": "fe597929aa17be0d76638c6704e7aeb2eada092e",
           "version": null
         }
       },

@@ -2,6 +2,10 @@ import Vapor
 import HTTP
 import SkelpoMiddleware
 
+final class TeamController: RouteCollection {
+    func boot(router: Router) throws {}
+}
+
 ///// The route controller for interacting with the teams.
 //final class TeamController: RouteCollection, EmptyInitializable {
 //    
