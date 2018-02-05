@@ -60,7 +60,7 @@
         "repositoryURL": "https://github.com/vapor/engine.git",
         "state": {
           "branch": "beta",
-          "revision": "3a6cadbc79b5a61ad36f2ac36cc190ffe4ab1193",
+          "revision": "64b92cecae8a6c9acc8a88888592a749ef3ccfda",
           "version": null
         }
       },
@@ -87,7 +87,7 @@
         "repositoryURL": "https://github.com/vapor/mysql.git",
         "state": {
           "branch": "beta",
-          "revision": "002049d5ebc8604160f2dc8c3a80d00c8a20ed75",
+          "revision": "483a869dc2df23e9fb591c41be352f516faba96d",
           "version": null
         }
       },
@@ -114,7 +114,7 @@
         "repositoryURL": "https://github.com/Skelpo/SkelpoMiddleware.git",
         "state": {
           "branch": "vapor-3",
-          "revision": "d97bb9a05fd32b0b7816b76e7b21e84994d266d5",
+          "revision": "ea65889baf0fb19b887cc32a4a9179418a4b84c4",
           "version": null
         }
       },
