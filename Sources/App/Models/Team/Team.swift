@@ -1,3 +1,4 @@
+import Vapor
 import FluentMySQL
 
 /// Represents any kind of team.
