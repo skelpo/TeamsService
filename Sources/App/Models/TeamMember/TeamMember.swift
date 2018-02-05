@@ -1,3 +1,4 @@
+import Vapor
 import FluentMySQL
 
 /// Represents a member for a team.
