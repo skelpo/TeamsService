@@ -5,6 +5,34 @@ import SkelpoMiddleware
 final class TeamController: RouteCollection {
     func boot(router: Router) throws {}
     
+    // MARK: - Route
+
+    /// The route handler for creating a new team.
+    func post(_ request: Request)throws -> Future<String> {
+        try request.content.decode(Team.self).map(to: Int?.self, { (team) -> Int? in
+            _ = team.save(on: request)
+            return team.id
+        }).unwrap(or: Abort(.internalServerError, reason: "Team was not saved to the database")).map(to: Void.self, { (team) in
+            let user = try request.payload(as: UserID.self).id
+            let member = TeamMember(userID: user, teamID: team, status: .admin)
+            member.save(on: request)
+        })
+//
+//        // Save the teams the that the user is a member of in the sessions.
+//        // This allows the user to access the team that was just create without getting a new access token.
+//        var teams = try request.teams()
+//        teams.append(teamID)
+//        try request.teams(teams)
+//
+//        // Return a JSON object with a re-authentication message and the team that was just created.
+//        return try JSON(node: [
+//                "message": "You should re-authenticate so you can access the team you just created",
+//                "team": team
+//            ])
+        
+        return Future("")
+    }
+    
     // MARK: - Helpers
 
     /// Verifies that a team ID is in the IDs containd in the JWT payload.
