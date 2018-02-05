@@ -4,6 +4,36 @@ import SkelpoMiddleware
 
 final class TeamController: RouteCollection {
     func boot(router: Router) throws {}
+    
+    // MARK: - Helpers
+
+    /// Verifies that a team ID is in the IDs containd in the JWT payload.
+    ///
+    /// - Parameters:
+    ///   - team: The ID to check.
+    ///   - request: The request with the IDs to check against.
+    /// - Returns: The teams contained in the request. This method is annotated with `@discardableResult`, so the returned value can be ignored.
+    /// - Throws: `Abort(.notFound, reason: "Team not found for user")` if the IDs in the payload does not contain the ID passed in.
+    @discardableResult
+    static func assertTeam(_ team: Int, with request: Request)throws -> [Int] {
+        let teams = try request.teams()
+        guard teams.contains(team) else {
+            throw Abort(.notFound, reason: "Team not found for user")
+        }
+        return teams
+    }
+
+    /// Verify that the request was sent by an administrator of the team. This is done by checking the `status` key in the request body.
+    ///
+    /// - Parameter request: The request to get the status from.
+    /// - Throws: `Abort(.forbidden, reason: "User doers not have required privileges")` if the status is missing or incorrect.
+    static func assertAdmin(_ request: Request)throws -> Future<Void> {
+        return try request.content.decode(Status.self).map(to: Void.self, { (body) in
+            guard MemberStatus(rawValue: body.status) == .admin else {
+                throw Abort(.forbidden, reason: "User doers not have required privileges")
+            }
+        })
+    }
 }
 
 ///// The route controller for interacting with the teams.
@@ -123,35 +153,6 @@ final class TeamController: RouteCollection {
 //                "status": Status.ok.statusCode,
 //                "message": "Team '\(team.name)' was deleted"
 //            ])
-//    }
-//    
-//    // MARK: - Helpers
-//    
-//    /// Verifies that a team ID is in the IDs containd in the JWT payload.
-//    ///
-//    /// - Parameters:
-//    ///   - team: The ID to check.
-//    ///   - request: The request with the IDs to check against.
-//    /// - Returns: The teams contained in the request. This method is annotated with `@discardableResult`, so the returned value can be ignored.
-//    /// - Throws: `Abort(.notFound, reason: "Team not found for user")` if the IDs in the payload does not contain the ID passed in.
-//    @discardableResult
-//    static func assertTeam(_ team: Int, with request: Request)throws -> [Int] {
-//        let teams = try request.teams()
-//        guard teams.contains(team) else {
-//            throw Abort(.notFound, reason: "Team not found for user")
-//        }
-//        return teams
-//    }
-//    
-//    /// Verify that the request was sent by an administrator of the team. This is done by checking the `status` key in the request body.
-//    ///
-//    /// - Parameter request: The request to get the status from.
-//    /// - Throws: `Abort(.forbidden, reason: "User doers not have required privileges")` if the status is missing or incorrect.
-//    static func assertAdmin(_ request: Request)throws {
-//        guard let status = request.data["status"]?.int,
-//            MemberStatus(rawValue: status) == .admin else {
-//                throw Abort(.forbidden, reason: "User doers not have required privileges")
-//        }
 //    }
 //}
 
