@@ -3,12 +3,21 @@ import HTTP
 import SkelpoMiddleware
 import JSONKit
 
+/// The route controller for interacting with the teams.
 final class TeamController: RouteCollection {
+    // MARK: - Configuration
+
+    /// Used for adding the routes in a `RouteCollection` to a route builder.
+    /// This method is called by the `routeBuilder.collection` method.
     func boot(router: Router) throws {
+        // Create a route at the path `/teams` using `.post` as the route handler.
         router.post(use: post)
+        
+        // Create a route at the path `/teams` using `.all` as the route handler.
+        router.get(use: all)
     }
     
-    // MARK: - Route
+    // MARK: - Routes
 
     /// The route handler for creating a new team.
     func post(_ request: Request)throws -> Future<JSON> {
@@ -46,6 +55,15 @@ final class TeamController: RouteCollection {
         })
     }
     
+    /// A route handler for getting all the teams a user belongs to.
+    func all(_ request: Request)throws -> Future<[Team]> {
+        // Get the IDs of the teams the user belongs to.
+        let ids = try request.teams()
+
+        // Get all the teams that have an ID in the `ids` array and return them.
+        return Team.query(on: request).filter(\.id, in: ids).all()
+    }
+    
     // MARK: - Helpers
 
     /// Verifies that a team ID is in the IDs containd in the JWT payload.
@@ -77,67 +95,13 @@ final class TeamController: RouteCollection {
     }
 }
 
-///// The route controller for interacting with the teams.
-//final class TeamController: RouteCollection, EmptyInitializable {
-//    
-//    /// This initializer is here so the controller can conform to the `EmptyInitializable` protocol.
-//    init() {}
-//    
-//    // MARK: - Configuration
-//    
-//    /// Used for adding the routes in a `RouteCollection` to a route builder.
-//    /// This method is called by the `routeBuilder.collection` method.
 //    func build(_ builder: RouteBuilder) throws {
-//        
-//        // Create a route at the path `/teams` using `.all` as the route handler.
-//        builder.get(handler: all)
-//        
-//        // Create a route at the path `/teams` using `.post` as the route handler.
-//        builder.post(handler: post)
 //        
 //        // Create a route at the path `/teams/:int` using `.getWithID` as the route handler.
 //        builder.get(Int.parameter, handler: getWithID)
 //        
 //        // Create a route at the path `/teams/:int` using `.delete` as the route handler.
 //        builder.delete(Int.parameter, handler: delete)
-//    }
-//    
-//    // MARK: - Route
-//    
-//    /// The route handler for creating a new team.
-//    func post(_ request: Request)throws -> ResponseRepresentable {
-//        // Get the name that will be for the new Team.
-//        guard let name = request.data["name"]?.string else {
-//            throw Abort(.badRequest, reason: "Missing 'name' paramater in request data")
-//        }
-//        
-//        // Create the team and save it.
-//        let team = Team(name: name)
-//        try team.save()
-//        
-//        // Get the ID of the new team.
-//        guard let teamID = team.id?.wrapped.int else {
-//            throw Abort(.internalServerError, reason: "Team was not saved to the database")
-//        }
-//        
-//        // Get the ID of the user who created the team.
-//        let userID: Int = try request.payload().get("id")
-//        
-//        // Create a member for the team with the user ID and amdin status, then save it.
-//        let member = TeamMember(userID: userID, teamID: teamID, status: .admin)
-//        try member.save()
-//        
-//        // Save the teams the that the user is a member of in the sessions.
-//        // This allows the user to access the team that was just create without getting a new access token.
-//        var teams = try request.teams()
-//        teams.append(teamID)
-//        try request.teams(teams)
-//        
-//        // Return a JSON object with a re-authentication message and the team that was just created.
-//        return try JSON(node: [
-//                "message": "You should re-authenticate so you can access the team you just created",
-//                "team": team
-//            ])
 //    }
 //    
 //    /// A route handler for getting all the teams a user belongs to.
