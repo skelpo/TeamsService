@@ -5,3 +5,8 @@ struct Status: Codable {
 struct UserID: Codable {
     let id: Int
 }
+
+struct MemberData: Codable {
+    let newStatus: Int
+    let userId: Int
+}

@@ -8,10 +8,43 @@ final class MemberController: RouteCollection {
 
     /// Used for adding the routes in a `RouteCollection` to a route builder.
     /// This method is called by the `routeBuilder.collection` method.
-    func boot(router: Router) throws {}
+    func boot(router: Router) throws {
+        // The route builder for routes with the path `/teams/:int/members/...`
+        let team = router.grouped(Int.parameter, "members")
+        
+        // Create a route at the path `/teams/:int/members` using the `.post` method as the handler.
+        team.post(use: post)
+    }
     
     // MARK: - Routes
     // /teams
+    
+    /// Adds a new member to a team.
+    func post(_ request: Request)throws -> Future<TeamMember> {
+        // Get the ID of the team to add the user to from the route path parameter.
+        let teamID = try request.parameter(Int.self)
+        
+        // Verifiy that the user adding the member is a team admin.
+        return try TeamController.assertAdmin(request).flatMap(to: Team?.self, { _ in
+            
+            // Verify that the user adding the member is part of the team they are adding the member to.
+            try TeamController.assertTeam(teamID, with: request)
+            
+            // Make sure that a team with the ID passed in exists.
+            return Team.find(teamID, on: request)
+        }).unwrap(
+            or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
+        ).flatMap(to: MemberData.self, { (team) in
+            
+            // Get the information for creating the member from the request body.
+            return try request.content.decode(MemberData.self)
+        }).flatMap(to: TeamMember.self, { (memberData) in
+            
+            // Create the member and save it.
+            let member = try TeamMember(userID: memberData.userId, teamID: teamID, status: memberData.newStatus)
+            return member.save(on: request)
+        })
+    }
     
     // /users
     
@@ -31,45 +64,12 @@ final class MemberController: RouteCollection {
 //        // Create a route at the path `/teams/:int/members/:int` using the `.getById` method as the handler.
 //        team.get(Int.parameter, handler: getById)
 //        
-//        // Create a route at the path `/teams/:int/members` using the `.post` method as the handler.
-//        team.post(handler: post)
-//        
 //        // Create a route at the path `/teams/:int/members/:int` using the `.delete` method as the handler.
 //        team.delete(Int.parameter, handler: delete)
 //        
 //        
 //        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
 //        user.get(Int.parameter, "teams", handler: teams)
-//    }
-//    
-//    /// Adds a new member to a team.
-//    func post(_ request: Request)throws -> ResponseRepresentable {
-//        // Verifiy that the user adding the member is a team admin.
-//        try TeamController.assertAdmin(request)
-//        
-//        // Get the ID of the team to add the user to from the route path parameter.
-//        let teamID = try request.parameters.next(Int.self)
-//        
-//        // Verify that the user adding the member is part of the team they are adding the member to.
-//        try TeamController.assertTeam(teamID, with: request)
-//        
-//        // Make sure that a team with the ID passed in exists.
-//        guard let _ = try Team.find(teamID) else {
-//            throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
-//        }
-//        
-//        // Get the information for creating the member from the request body.
-//        guard let newStatus = request.data["new_status"]?.int,
-//              let userID = request.data["user_id"]?.int else {
-//                throw Abort(.badRequest, reason: "Missing status or user ID for new member")
-//        }
-//        
-//        // Create the member and save it.
-//        let member = try TeamMember(userID: userID, teamID: teamID, status: newStatus)
-//        try member.save()
-//        
-//        // Return the JSON from the new member.
-//        return try member.makeJSON()
 //    }
 //    
 //    /// Gets all the members of a team.
