@@ -14,6 +14,9 @@ final class MemberController: RouteCollection {
         
         // Create a route at the path `/teams/:int/members` using the `.post` method as the handler.
         team.post(use: post)
+        
+        // Create a route at the path `/teams/:int/members` using the `.get` method as the handler.
+        team.get(use: get)
     }
     
     // MARK: - Routes
@@ -46,6 +49,19 @@ final class MemberController: RouteCollection {
         })
     }
     
+    /// Gets all the members of a team.
+    func get(_ request: Request)throws -> Future<[TeamMember]> {
+        // Get the route parameter, which is the ID of the team we are getting the members from.
+        let id = try request.parameter(Int.self)
+
+        // Get the team with the ID from the route. If the user doesn't exist, abort.
+        return Team.find(id, on: request).unwrap(
+            or: Abort(.notFound, reason: "No team exists with the ID of '\(id)'")
+        ).flatMap(to: [TeamMember].self, { (team) in
+            return try team.members(queriedWith: request).all()
+        })
+    }
+    
     // /users
     
     // MARK: - Helpers
@@ -58,9 +74,6 @@ final class MemberController: RouteCollection {
 //        // The route builder for routes with the path `/teams/members/...`
 //        let user = builder.grouped("member")
 //        
-//        // Create a route at the path `/teams/:int/members` using the `.get` method as the handler.
-//        team.get(handler: get)
-//        
 //        // Create a route at the path `/teams/:int/members/:int` using the `.getById` method as the handler.
 //        team.get(Int.parameter, handler: getById)
 //        
@@ -70,20 +83,6 @@ final class MemberController: RouteCollection {
 //        
 //        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
 //        user.get(Int.parameter, "teams", handler: teams)
-//    }
-//    
-//    /// Gets all the members of a team.
-//    func get(_ request: Request)throws -> ResponseRepresentable {
-//        // Get the route parameter, which is the ID of the team we are getting the members from.
-//        let id = try request.parameters.next(Int.self)
-//        
-//        // Get the team with the ID from the route. If the user doesn't exist, abort.
-//        guard let team = try Team.find(id) else {
-//            throw Abort(.notFound, reason: "No team exists with the ID of '\(id)'")
-//        }
-//        
-//        // Return all the team's members, converted to JSON.
-//        return try team.members().all().makeJSON()
 //    }
 //    
 //    /// Get a member for a team by its ID.
