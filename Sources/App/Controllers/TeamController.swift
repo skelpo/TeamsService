@@ -15,6 +15,9 @@ final class TeamController: RouteCollection {
         
         // Create a route at the path `/teams` using `.all` as the route handler.
         router.get(use: all)
+        
+        // Create a route at the path `/teams/:int` using `.getWithID` as the route handler.
+        router.get(Int.parameter, use: getWithID)
     }
     
     // MARK: - Routes
@@ -64,6 +67,18 @@ final class TeamController: RouteCollection {
         return Team.query(on: request).filter(\.id, in: ids).all()
     }
     
+    /// A route handler for getting a team with a specefied ID.
+    func getWithID(_ request: Request)throws -> Future<Team> {
+        // Get the ID of the team to get from the route parameters.
+        let id = try request.parameter(Int.self)
+
+        // Verify that the user is a member of the team they are getting.
+        try TeamController.assertTeam(id, with: request)
+        
+        // Get the team from the database by it's ID and return it if it exists, otherwise abort.
+        return Team.find(id, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the id of '\(id)'"))
+    }
+    
     // MARK: - Helpers
 
     /// Verifies that a team ID is in the IDs containd in the JWT payload.
@@ -97,40 +112,8 @@ final class TeamController: RouteCollection {
 
 //    func build(_ builder: RouteBuilder) throws {
 //        
-//        // Create a route at the path `/teams/:int` using `.getWithID` as the route handler.
-//        builder.get(Int.parameter, handler: getWithID)
-//        
 //        // Create a route at the path `/teams/:int` using `.delete` as the route handler.
 //        builder.delete(Int.parameter, handler: delete)
-//    }
-//    
-//    /// A route handler for getting all the teams a user belongs to.
-//    func all(_ request: Request)throws -> ResponseRepresentable {
-//        // Get the IDs of the teams the user belongs to.
-//        let ids = try request.teams()
-//        
-//        // Get all the teams that have an ID in the `ids` array.
-//        let teams = try Team.makeQuery().filter("id", in: ids).all()
-//        
-//        // Return the teams in JSON format.
-//        return try teams.makeJSON()
-//    }
-//    
-//    /// A route handler for getting a team with a specefied ID.
-//    func getWithID(_ request: Request)throws -> ResponseRepresentable {
-//        // Get the ID of the team to get from the route parameters.
-//        let id = try request.parameters.next(Int.self)
-//        
-//        // Verify that the user is a member of the team they are getting.
-//        try TeamController.assertTeam(id, with: request)
-//        
-//        // Get the team from the data base and convert it to JSON.
-//        guard let team = try Team.find(id)?.makeJSON() else {
-//            throw Abort(.notFound, reason: "No team exists with the id of '\(id)'")
-//        }
-//        
-//        // Return the JSON object.
-//        return team
 //    }
 //    
 //    /// A route handler for deleting a team.
