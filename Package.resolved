@@ -74,6 +74,15 @@
         }
       },
       {
+        "package": "JSON",
+        "repositoryURL": "git@github.com:skelpo/JSON.git",
+        "state": {
+          "branch": "master",
+          "revision": "3d85c6caf8c965e7cecaabc7c1939c8785bf9343",
+          "version": null
+        }
+      },
+      {
         "package": "JWT",
         "repositoryURL": "https://github.com/vapor/jwt.git",
         "state": {
