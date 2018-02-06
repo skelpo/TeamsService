@@ -1,5 +1,4 @@
 import Vapor
-import HTTP
 import SkelpoMiddleware
 import JSONKit
 import Fluent
