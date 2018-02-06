@@ -58,6 +58,8 @@ final class MemberController: RouteCollection {
         return Team.find(id, on: request).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(id)'")
         ).flatMap(to: [TeamMember].self, { (team) in
+            
+            // Get all the members belonging to a team and return them from the route.
             return try team.members(queriedWith: request).all()
         })
     }
