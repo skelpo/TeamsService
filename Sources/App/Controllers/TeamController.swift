@@ -2,6 +2,7 @@ import Vapor
 import HTTP
 import SkelpoMiddleware
 import JSONKit
+import Fluent
 
 /// The route controller for interacting with the teams.
 final class TeamController: RouteCollection {
@@ -18,6 +19,9 @@ final class TeamController: RouteCollection {
         
         // Create a route at the path `/teams/:int` using `.getWithID` as the route handler.
         router.get(Int.parameter, use: getWithID)
+        
+        // Create a route at the path `/teams/:int` using `.delete` as the route handler.
+        router.get(Int.parameter, use: delete)
     }
     
     // MARK: - Routes
@@ -79,6 +83,39 @@ final class TeamController: RouteCollection {
         return Team.find(id, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the id of '\(id)'"))
     }
     
+    /// A route handler for deleting a team.
+    func delete(_ request: Request)throws -> Future<JSON> {
+        // Get the ID of the team to delete from the route parameters.
+        let teamID = try request.parameter(Int.self)
+        
+        // Verify that the user tying to delete the team is an admin member in the team.
+        return try TeamController.assertAdmin(request).flatMap(to: Team?.self, { _ in
+            
+            // Verify that the user is a member of the team they are trying to delete.
+            try TeamController.assertTeam(teamID, with: request)
+            
+            // Get team with the ID fetch from the route parameters.
+            return Team.find(teamID, on: request)
+        }).unwrap(
+            or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
+        ).flatMap(to: Team.self, { (team) in
+            guard let id = team.id else {
+                throw Abort(.internalServerError, reason: "Team found without an ID")
+            }
+        
+            // Delete the team and all its members.
+            TeamMember.query(on: request).filter(\TeamMember.teamID == id)
+            return team.delete(on: request).transform(to: team)
+        }).map(to: JSON.self, { (team) -> JSON in
+            
+            // Return a JSON object with a 200 status code and confirmation message.
+            return [
+                "status": .number(.int(HTTPStatus.ok.code)),
+                "message": .string("Team '\(team.name)' was deleted")
+            ]
+        })
+    }
+    
     // MARK: - Helpers
 
     /// Verifies that a team ID is in the IDs containd in the JWT payload.
@@ -109,38 +146,3 @@ final class TeamController: RouteCollection {
         })
     }
 }
-
-//    func build(_ builder: RouteBuilder) throws {
-//        
-//        // Create a route at the path `/teams/:int` using `.delete` as the route handler.
-//        builder.delete(Int.parameter, handler: delete)
-//    }
-//    
-//    /// A route handler for deleting a team.
-//    func delete(_ request: Request)throws -> ResponseRepresentable {
-//        // Verify that the user tying to delete the team is an admin member in the team.
-//        try TeamController.assertAdmin(request)
-//        
-//        // Get the ID of the team to delete from the route parameters.
-//        let teamID = try request.parameters.next(Int.self)
-//        
-//        // Verify that the user is a member of the team they are trying to delete.
-//        try TeamController.assertTeam(teamID, with: request)
-//        
-//        // Get the team from the database with the `teamID`.
-//        guard let team = try Team.find(teamID) else {
-//            throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
-//        }
-//        
-//        // Delete the team and all its members.
-//        try TeamMember.makeQuery().filter("teamId", team.id).delete()
-//        try team.delete()
-//        
-//        // Return a JSON object with a 200 status code and confirmation message.
-//        return try JSON(node: [
-//                "status": Status.ok.statusCode,
-//                "message": "Team '\(team.name)' was deleted"
-//            ])
-//    }
-//}
-
