@@ -1,36 +1,49 @@
 import Vapor
 import HTTP
 import SkelpoMiddleware
+import JSONKit
 
 final class TeamController: RouteCollection {
-    func boot(router: Router) throws {}
+    func boot(router: Router) throws {
+        router.post(use: post)
+    }
     
     // MARK: - Route
 
     /// The route handler for creating a new team.
-    func post(_ request: Request)throws -> Future<String> {
-        try request.content.decode(Team.self).map(to: Int?.self, { (team) -> Int? in
-            _ = team.save(on: request)
-            return team.id
-        }).unwrap(or: Abort(.internalServerError, reason: "Team was not saved to the database")).map(to: Void.self, { (team) in
-            let user = try request.payload(as: UserID.self).id
-            let member = TeamMember(userID: user, teamID: team, status: .admin)
-            member.save(on: request)
-        })
-//
-//        // Save the teams the that the user is a member of in the sessions.
-//        // This allows the user to access the team that was just create without getting a new access token.
-//        var teams = try request.teams()
-//        teams.append(teamID)
-//        try request.teams(teams)
-//
-//        // Return a JSON object with a re-authentication message and the team that was just created.
-//        return try JSON(node: [
-//                "message": "You should re-authenticate so you can access the team you just created",
-//                "team": team
-//            ])
+    func post(_ request: Request)throws -> Future<JSON> {
         
-        return Future("")
+        // Decode the request's body to a `Team` object.
+        return try request.content.decode(Team.self).flatMap(to: Team.self, { (team) in
+            // Save the team to the data base and continue to the next promise closure.
+            return team.save(on: request)
+        }).map(to: JSON.self, { (team) in
+            // Get the team's database ID.
+            guard let teamId = team.id else {
+                
+                // The save somehow failed. Abort.
+                throw Abort(.internalServerError, reason: "Team was not saved to the database")
+            }
+            
+            // Get the ID of the user that made the request from the access token's payload
+            let user = try request.payload(as: UserID.self).id
+            
+            // Store the new team ID with the rest of the IDs,
+            // so the user doesn't have to re-authenticate to access the team
+            var teams = try request.teams()
+            teams.append(teamId)
+            try request.teams(teams)
+            
+            // Create and save the user as an admin member of the new team.
+            let member = TeamMember(userID: user, teamID: teamId, status: .admin)
+            _ = member.save(on: request)
+            
+            // Create a JSON reqponse body and return it.
+            return try [
+                "message": "You should re-authenticate so you can access the team you just created",
+                "team": team.json()
+            ]
+        })
     }
     
     // MARK: - Helpers
