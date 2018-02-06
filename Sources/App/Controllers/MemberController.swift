@@ -1,20 +1,23 @@
 import Vapor
 import HTTP
 
+/// The routes controller for interacting with team members.
 final class MemberController: RouteCollection {
+    
+    // MARK: - Configuration
+
+    /// Used for adding the routes in a `RouteCollection` to a route builder.
+    /// This method is called by the `routeBuilder.collection` method.
     func boot(router: Router) throws {}
+    
+    // MARK: - Routes
+    // /teams
+    
+    // /users
+    
+    // MARK: - Helpers
 }
 
-///// The routes controller for interacting with team members.
-//final class MemberController: RouteCollection, EmptyInitializable {
-//    
-//    /// This init method is so the `MemberController` can conform to the `EmptyInitializable` protocol.
-//    init() {}
-//    
-//    // MARK: - Configuration
-//    
-//    /// Used for adding the routes in a `RouteCollection` to a route builder.
-//    /// This method is called by the `routeBuilder.collection` method.
 //    func build(_ builder: RouteBuilder) throws {
 //        // The route builder for routes with the path `/teams/:int/members/...`
 //        let team = builder.grouped(Int.parameter, "members")
@@ -38,9 +41,6 @@ final class MemberController: RouteCollection {
 //        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
 //        user.get(Int.parameter, "teams", handler: teams)
 //    }
-//    
-//    // MARK: - Routes
-//    // /teams
 //    
 //    /// Adds a new member to a team.
 //    func post(_ request: Request)throws -> ResponseRepresentable {
@@ -108,7 +108,7 @@ final class MemberController: RouteCollection {
 //            ])
 //    }
 //    
-//    // /users
+//
 //    
 //    /// Get all the teams the user is a member of.
 //    func teams(_ request: Request)throws -> ResponseRepresentable {
@@ -125,7 +125,7 @@ final class MemberController: RouteCollection {
 //        return try member.teams().all().makeJSON()
 //    }
 //    
-//    // MARK: - Helpers
+//
 //    
 //    /// Get the member and the team with the IDs in a route's parameters.
 //    ///
