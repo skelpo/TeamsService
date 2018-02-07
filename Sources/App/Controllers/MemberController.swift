@@ -10,8 +10,12 @@ final class MemberController: RouteCollection {
     /// Used for adding the routes in a `RouteCollection` to a route builder.
     /// This method is called by the `routeBuilder.collection` method.
     func boot(router: Router) throws {
+        
         // The route builder for routes with the path `/teams/:int/members/...`
         let team = router.grouped(Int.parameter, "members")
+        
+        // The route builder for routes with the path `/teams/members/...`
+        let user = router.grouped("member")
         
         // Create a route at the path `/teams/:int/members` using the `.post` method as the handler.
         team.post(use: post)
@@ -24,6 +28,9 @@ final class MemberController: RouteCollection {
         
         // Create a route at the path `/teams/:int/members/:int` using the `.delete` method as the handler.
         team.delete(Int.parameter, use: delete)
+        
+        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
+        user.get(Int.parameter, "teams", use: teams)
     }
     
     // MARK: - Routes
@@ -102,6 +109,23 @@ final class MemberController: RouteCollection {
     
     // /users
     
+    /// Get all the teams the user is a member of.
+    func teams(_ request: Request)throws -> Future<[Team]> {
+
+        // Get the ID of the user to get the teams for from the route path parameter.
+        let userID = try request.parameter(Int.self)
+
+        // Get the member from the database based on its user ID.
+        return TeamMember.query(on: request).filter(\TeamMember.userID == userID).first().unwrap(
+            or: Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
+        ).flatMap(to: [Team].self, { (member) in
+            
+            // Return all the member's teams
+            return try member.teams(queriedWith: request).all()
+        })
+    }
+    
+    
     // MARK: - Helpers
     
     /// Get the member and the team with the IDs in a route's parameters.
@@ -137,31 +161,3 @@ final class MemberController: RouteCollection {
         }
     }
 }
-
-//    func build(_ builder: RouteBuilder) throws {
-//        // The route builder for routes with the path `/teams/:int/members/...`
-//        let team = builder.grouped(Int.parameter, "members")
-//        
-//        // The route builder for routes with the path `/teams/members/...`
-//        let user = builder.grouped("member")
-//        
-//        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
-//        user.get(Int.parameter, "teams", handler: teams)
-//    }
-//
-//    /// Get all the teams the user is a member of.
-//    func teams(_ request: Request)throws -> ResponseRepresentable {
-//        
-//        // Get the ID of the user to get the teams for from the route path parameter.
-//        let userID = try request.parameters.next(Int.self)
-//        
-//        // Get the member from the database based on its user ID.
-//        guard let member = try TeamMember.makeQuery().filter("userId", userID).first() else {
-//            throw Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
-//        }
-//        
-//        // Return all the member's teams in JSON format.
-//        return try member.teams().all().makeJSON()
-//    }
-//}
-
