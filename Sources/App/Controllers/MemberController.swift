@@ -1,5 +1,6 @@
 import Vapor
 import HTTP
+import Fluent
 
 /// The routes controller for interacting with team members.
 final class MemberController: RouteCollection {
@@ -67,6 +68,39 @@ final class MemberController: RouteCollection {
     // /users
     
     // MARK: - Helpers
+    
+    /// Get the member and the team with the IDs in a route's parameters.
+    ///
+    /// - parameter request: The request with the route parameters to get the member and team.
+    func memberAndTeam(from request: Request)throws -> Future<(member: TeamMember, team: Team)> {
+        // Get the team ID and member ID from the route parameters.
+        let teamID = try request.parameter(Int.self)
+        let memberID: Int? = try request.parameter(Int.self)
+
+        // Verfiy that the member is part of the team that was pulled from the route parameters
+        try TeamController.assertTeam(teamID, with: request)
+
+        // Get the team based on the ID.
+        let teamQuery = Team.find(teamID, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'"))
+        var team: Team!
+        
+        return teamQuery.flatMap(to: TeamMember.self) { (queryResult) in
+            team = queryResult
+            
+            // Get the member from the team with the ID.
+            return try team.members(
+                queriedWith: request
+            ).filter(
+                \TeamMember.id == memberID
+            ).first().unwrap(
+                or: Abort(.notFound, reason: "No member with the ID of '\(String(describing: memberID))' exists in the specified team")
+            )
+        }.map(to: (member: TeamMember, team: Team).self) { (member) in
+            
+            // Return the member and team.
+            return (member: member, team: team)
+        }
+    }
 }
 
 //    func build(_ builder: RouteBuilder) throws {
@@ -124,33 +158,6 @@ final class MemberController: RouteCollection {
 //        
 //        // Return all the member's teams in JSON format.
 //        return try member.teams().all().makeJSON()
-//    }
-//    
-//
-//    
-//    /// Get the member and the team with the IDs in a route's parameters.
-//    ///
-//    /// - parameter request: The request with the route parameters to get the member and team.
-//    func memberAndTeam(from request: Request)throws -> (member: TeamMember, team: Team) {
-//        // Get the team ID and member ID from the route parameters.
-//        let teamID = try request.parameters.next(Int.self)
-//        let memberID = try request.parameters.next(Int.self)
-//        
-//        // Verfiy that the member is part of the team that was pulled from the route parameters
-//        try TeamController.assertTeam(teamID, with: request)
-//        
-//        // Get the team based on the ID.
-//        guard let team = try Team.find(teamID) else {
-//            throw Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
-//        }
-//        
-//        // Get the member from the team with the ID.
-//        guard let member = try team.members().find(memberID) else {
-//            throw Abort(.notFound, reason: "No member with the ID of '\(memberID)' exists in the specified team")
-//        }
-//        
-//        // Return the member and team.
-//        return (member: member, team: team)
 //    }
 //}
 
