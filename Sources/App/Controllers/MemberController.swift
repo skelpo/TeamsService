@@ -1,6 +1,6 @@
 import Vapor
-import HTTP
 import Fluent
+import JSON
 
 /// The routes controller for interacting with team members.
 final class MemberController: RouteCollection {
@@ -21,6 +21,9 @@ final class MemberController: RouteCollection {
         
         // Create a route at the path `/teams/:int/members/:int` using the `.getById` method as the handler.
         team.get(Int.parameter, use: getById)
+        
+        // Create a route at the path `/teams/:int/members/:int` using the `.delete` method as the handler.
+        team.delete(Int.parameter, use: delete)
     }
     
     // MARK: - Routes
@@ -75,6 +78,28 @@ final class MemberController: RouteCollection {
         })
     }
     
+    /// Remove a member from a team.
+    func delete(_ request: Request)throws -> Future<JSON> {
+
+        // Verify that the user removing the member has an admin status in the team they are removing the member from.
+        return try TeamController.assertAdmin(request).flatMap(to: (member: TeamMember, team: Team).self, { _ in
+            
+            // Fetch the team and member objects with the IDs in the route parameters.
+            return try self.memberAndTeam(from: request)
+        }).flatMap(to: TeamMember.self, { (parameters) in
+            
+            // Get the member to remove and delete it from the database.
+            return parameters.member.delete(on: request).transform(to: parameters.member)
+        }).map(to: JSON.self, { (member) -> JSON in
+            
+            // Return a 200 status and a confirmation message with the ID of the member that was deleted.
+            return [
+                "status": .number(.int(HTTPStatus.ok.code)),
+                "message": .string("Member with the ID '\(member.id ?? -1)' was removed from team")
+            ]
+        })
+    }
+    
     // /users
     
     // MARK: - Helpers
@@ -120,33 +145,10 @@ final class MemberController: RouteCollection {
 //        // The route builder for routes with the path `/teams/members/...`
 //        let user = builder.grouped("member")
 //        
-//        // Create a route at the path `/teams/:int/members/:int` using the `.delete` method as the handler.
-//        team.delete(Int.parameter, handler: delete)
-//        
-//        
 //        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
 //        user.get(Int.parameter, "teams", handler: teams)
 //    }
-//    
-//    /// Remove a member from a team.
-//    func delete(_ request: Request)throws -> ResponseRepresentable {
-//        
-//        // Verify that the user removing the member has an admin status in the team they are removing the member from.
-//        try TeamController.assertAdmin(request)
-//        
-//        // Get the member to remove and delete it from the database.
-//        let member = try memberAndTeam(from: request).member
-//        try member.delete()
-//        
-//        // Return a 200 status and a confirmation message with the ID of the member that was deleted.
-//        return try JSON(node: [
-//            "status": Status.ok.statusCode,
-//            "message": "Member with the ID '\(member.id?.wrapped.string ?? "null")' was removed from team"
-//            ])
-//    }
-//    
 //
-//    
 //    /// Get all the teams the user is a member of.
 //    func teams(_ request: Request)throws -> ResponseRepresentable {
 //        
