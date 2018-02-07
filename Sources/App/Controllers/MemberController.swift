@@ -1,6 +1,6 @@
 import Vapor
 import Fluent
-import JSON
+import JSONKit
 
 /// The routes controller for interacting with team members.
 final class MemberController: RouteCollection {
@@ -101,8 +101,8 @@ final class MemberController: RouteCollection {
             
             // Return a 200 status and a confirmation message with the ID of the member that was deleted.
             return [
-                "status": .number(.int(HTTPStatus.ok.code)),
-                "message": .string("Member with the ID '\(member.id ?? -1)' was removed from team")
+                "status": HTTPStatus.ok.code,
+                "message": "Member with the ID '\(member.id ?? -1)' was removed from team"
             ]
         })
     }

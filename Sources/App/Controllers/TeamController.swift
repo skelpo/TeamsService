@@ -109,8 +109,8 @@ final class TeamController: RouteCollection {
             
             // Return a JSON object with a 200 status code and confirmation message.
             return [
-                "status": .number(.int(HTTPStatus.ok.code)),
-                "message": .string("Team '\(team.name)' was deleted")
+                "status": HTTPStatus.ok.code,
+                "message": "Team '\(team.name)' was deleted"
             ]
         })
     }
