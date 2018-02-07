@@ -18,6 +18,9 @@ final class MemberController: RouteCollection {
         
         // Create a route at the path `/teams/:int/members` using the `.get` method as the handler.
         team.get(use: get)
+        
+        // Create a route at the path `/teams/:int/members/:int` using the `.getById` method as the handler.
+        team.get(Int.parameter, use: getById)
     }
     
     // MARK: - Routes
@@ -62,6 +65,13 @@ final class MemberController: RouteCollection {
             
             // Get all the members belonging to a team and return them from the route.
             return try team.members(queriedWith: request).all()
+        })
+    }
+    
+    /// Get a member for a team by its ID.
+    func getById(_ request: Request)throws -> Future<TeamMember> {
+        return try memberAndTeam(from: request).map(to: TeamMember.self, { (parameters) in
+            return parameters.member
         })
     }
     
@@ -110,20 +120,12 @@ final class MemberController: RouteCollection {
 //        // The route builder for routes with the path `/teams/members/...`
 //        let user = builder.grouped("member")
 //        
-//        // Create a route at the path `/teams/:int/members/:int` using the `.getById` method as the handler.
-//        team.get(Int.parameter, handler: getById)
-//        
 //        // Create a route at the path `/teams/:int/members/:int` using the `.delete` method as the handler.
 //        team.delete(Int.parameter, handler: delete)
 //        
 //        
 //        // Create a route at the path `/teams/members/:int/teams` using the `.teams` method as the handler.
 //        user.get(Int.parameter, "teams", handler: teams)
-//    }
-//    
-//    /// Get a member for a team by its ID.
-//    func getById(_ request: Request)throws -> ResponseRepresentable {
-//        return try memberAndTeam(from: request).member.makeJSON()
 //    }
 //    
 //    /// Remove a member from a team.
