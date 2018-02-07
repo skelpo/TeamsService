@@ -121,7 +121,7 @@ final class MemberController: RouteCollection {
         ).flatMap(to: [Team].self, { (member) in
             
             // Return all the member's teams
-            return try member.teams(queriedWith: request).all()
+            return member.teams(queriedWith: request).all()
         })
     }
     
