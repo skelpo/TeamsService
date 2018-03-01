@@ -26,13 +26,13 @@ final class TeamController: RouteCollection {
     // MARK: - Routes
 
     /// The route handler for creating a new team.
-    func post(_ request: Request)throws -> Future<JSON> {
+    func post(_ request: Request)throws -> Future<TeamCreatedResponse> {
         
         // Decode the request's body to a `Team` object.
         return try request.content.decode(Team.self).flatMap(to: Team.self, { (team) in
             // Save the team to the data base and continue to the next promise closure.
             return team.save(on: request)
-        }).map(to: JSON.self, { (team) in
+        }).flatMap(to: Team.self, { (team) in
             // Get the team's database ID.
             guard let teamId = team.id else {
                 
@@ -51,13 +51,11 @@ final class TeamController: RouteCollection {
             
             // Create and save the user as an admin member of the new team.
             let member = TeamMember(userID: user, teamID: teamId, status: .admin)
-            _ = member.save(on: request)
+            return member.save(on: request).transform(to: team)
+        }).map(to: TeamCreatedResponse.self, { (team) in
             
-            // Create a JSON reqponse body and return it.
-            return try [
-                "message": "You should re-authenticate so you can access the team you just created",
-                "team": team.json()
-            ]
+            // Return the team that was created and a human readable message requesting the client to re-authenticate.
+            return TeamCreatedResponse(message: "You should re-authenticate so you can access the team you just created", team: team)
         })
     }
     

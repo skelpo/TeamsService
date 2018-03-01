@@ -1,9 +1,13 @@
 import Vapor
 
 /// These models are used to convert a `Request` body to a readable type. Example:
+///
 ///     try request.content.decode(Status.self).map(to: Void.self, { (body) in }
-/// The types propertie's names have to match the body's value keys, as data encoding is
+///
+/// The types property names have to match the body's value keys, as data encoding is
 /// used to convert to the given type.
+///
+/// Some of these types are used to return data from a route. Theses types conform to `Content`.
 
 // ==---------
 
@@ -42,4 +46,15 @@ struct ModelDeletedResponse: Content {
     
     /// An optional human readable message, confirming a successful deletion.
     let message: String?
+}
+
+/// The response's body when a new team is created.
+/// We have this type because we need to send a message to the client that they shoudl re-authenticate.
+struct TeamCreatedResponse: Content {
+    
+    /// A human readable message instructing the client to do something.
+    let message: String
+    
+    /// The team that was created.
+    let team: Team
 }
