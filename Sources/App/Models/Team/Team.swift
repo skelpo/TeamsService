@@ -32,9 +32,8 @@ final class Team: Content {
 /// When you conform a class to `Model` in an extention,
 /// the class must already conform to `Codable`.
 extension Team: Model {
-    
     // The key path to the model's `id` property.
-    static var idKey: ReferenceWritableKeyPath<Team, Int?> {
+    static var idKey: WritableKeyPath<Team, Int?> {
         return \.id
     }
     

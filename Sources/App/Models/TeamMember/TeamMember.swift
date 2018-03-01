@@ -60,7 +60,7 @@ final class TeamMember: Content {
 /// the class must already conform to `Codable`.
 extension TeamMember: Model {
     // The key path to the model's `id` property.
-    static var idKey: ReferenceWritableKeyPath<TeamMember, Int?> {
+    static var idKey: WritableKeyPath<TeamMember, Int?> {
         return \.id
     }
     
