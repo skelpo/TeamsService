@@ -1,6 +1,5 @@
 import Vapor
 import Fluent
-import JSONKit
 
 /// The routes controller for interacting with team members.
 final class MemberController: RouteCollection {

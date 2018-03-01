@@ -1,6 +1,5 @@
 import Vapor
 import SkelpoMiddleware
-import JSONKit
 import Fluent
 
 /// The route controller for interacting with the teams.
