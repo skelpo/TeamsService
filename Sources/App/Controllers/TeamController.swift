@@ -83,7 +83,7 @@ final class TeamController: RouteCollection {
     }
     
     /// A route handler for deleting a team.
-    func delete(_ request: Request)throws -> Future<JSON> {
+    func delete(_ request: Request)throws -> Future<ModelDeletedResponse> {
         // Get the ID of the team to delete from the route parameters.
         let teamID = try request.parameter(Int.self)
         
@@ -97,21 +97,18 @@ final class TeamController: RouteCollection {
             return Team.find(teamID, on: request)
         }).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
-        ).flatMap(to: Team.self, { (team) in
+        ).flatMap(to: String.self, { (team) in
             guard let id = team.id else {
                 throw Abort(.internalServerError, reason: "Team found without an ID")
             }
         
             // Delete the team and all its members.
             TeamMember.query(on: request).filter(\TeamMember.teamID == id)
-            return team.delete(on: request).transform(to: team)
-        }).map(to: JSON.self, { (team) -> JSON in
+            return team.delete(on: request).transform(to: team.name)
+        }).map(to: ModelDeletedResponse.self, { (name) in
             
-            // Return a JSON object with a 200 status code and confirmation message.
-            return [
-                "status": HTTPStatus.ok.code,
-                "message": "Team '\(team.name)' was deleted"
-            ]
+            // Return a JSON object with a 204 status code and confirmation message.
+            return ModelDeletedResponse(message: "Team '\(name)' was deleted")
         })
     }
     

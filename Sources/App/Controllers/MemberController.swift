@@ -86,24 +86,21 @@ final class MemberController: RouteCollection {
     }
     
     /// Remove a member from a team.
-    func delete(_ request: Request)throws -> Future<JSON> {
+    func delete(_ request: Request)throws -> Future<ModelDeletedResponse> {
 
         // Verify that the user removing the member has an admin status in the team they are removing the member from.
         return try TeamController.assertAdmin(request).flatMap(to: (member: TeamMember, team: Team).self, { _ in
             
             // Fetch the team and member objects with the IDs in the route parameters.
             return try self.memberAndTeam(from: request)
-        }).flatMap(to: TeamMember.self, { (parameters) in
+        }).flatMap(to: Int.self, { (parameters) in
             
-            // Get the member to remove and delete it from the database.
-            return parameters.member.delete(on: request).transform(to: parameters.member)
-        }).map(to: JSON.self, { (member) -> JSON in
+            // Get the member to remove and delete it from the database. Then unwrap the member's ID and return it from the future.
+            return parameters.member.delete(on: request).transform(to: parameters.member.id).unwrap(or: Abort(.internalServerError))
+        }).map(to: ModelDeletedResponse.self, { (id) in
             
-            // Return a 200 status and a confirmation message with the ID of the member that was deleted.
-            return [
-                "status": HTTPStatus.ok.code,
-                "message": "Member with the ID '\(member.id ?? -1)' was removed from team"
-            ]
+            // Return a 204 status and a confirmation message with the ID of the member that was deleted.
+            return ModelDeletedResponse(message: "Member with the ID '\(id)' was removed from team")
         })
     }
     
