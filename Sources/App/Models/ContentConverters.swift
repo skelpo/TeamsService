@@ -1,3 +1,5 @@
+import Vapor
+
 /// These models are used to convert a `Request` body to a readable type. Example:
 ///     try request.content.decode(Status.self).map(to: Void.self, { (body) in }
 /// The types propertie's names have to match the body's value keys, as data encoding is
@@ -30,4 +32,14 @@ struct MemberData: Codable {
         case newStatus = "new_status"
         case userId = "user_id"
     }
+}
+
+/// A response's body for a successful DELETE request.
+struct ModelDeletedResponse: Content {
+    
+    /// The status code of the response. According to [RFC 7231](http://devdocs.io/http/rfc7231#section-6.3.5), this should be 204 (No Content) for a deletion.
+    let status: HTTPStatus = .noContent
+    
+    /// An optional human readable message, confirming a successful deletion.
+    let message: String?
 }
