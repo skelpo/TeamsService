@@ -16,7 +16,7 @@ final class TeamMember: Content {
     let teamID: Int
     
     /// The status the member holds in the team ('admin' or 'standard').
-    let status: Int
+    let status: MemberStatus
     
     
     /// Creates a `TeamMember` with the neccesary information.
@@ -30,7 +30,7 @@ final class TeamMember: Content {
     init(userID: Int, teamID: Int, status: MemberStatus) {
         self.userID = userID
         self.teamID = teamID
-        self.status = status.rawValue
+        self.status = status
     }
     
     /// Creates a `TeamMember` with the neccesary information.
