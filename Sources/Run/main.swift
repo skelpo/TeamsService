@@ -1,6 +1,7 @@
-import App
+import Foundation
 import Service
 import Vapor
+import App
 
 do {
     var config = Config.default()
@@ -20,4 +21,5 @@ do {
     try app.run()
 } catch let error {
     print("Error on Boot:\n\(error)")
+    exit(1)
 }
