@@ -143,12 +143,10 @@ final class MemberController: RouteCollection {
             team = queryResult
             
             // Get the member from the team with the ID.
-            return try team.members(
-                queriedWith: request
-            ).filter(
-                \TeamMember.id == memberID
-            ).first().unwrap(
-                or: Abort(.notFound, reason: "No member with the ID of '\(String(describing: memberID))' exists in the specified team")
+            return try team.members(queriedWith: request)
+                           .filter(\TeamMember.id == memberID)
+                           .first()
+                           .unwrap(or: Abort(.notFound, reason: "No member with the ID of '\(String(describing: memberID))' exists in the specified team")
             )
         }.map(to: (member: TeamMember, team: Team).self) { (member) in
             
