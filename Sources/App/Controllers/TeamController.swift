@@ -132,8 +132,8 @@ final class TeamController: RouteCollection {
     /// - Parameter request: The request to get the status from.
     /// - Throws: `Abort(.forbidden, reason: "User doers not have required privileges")` if the status is missing or incorrect.
     static func assertAdmin(_ request: Request)throws -> Future<Void> {
-        return try request.content.decode(Status.self).map(to: Void.self, { (body) in
-            guard MemberStatus(rawValue: body.status) == .admin else {
+        return try request.content.decode(MemberStatus.self).map(to: Void.self, { (status) in
+            guard status == .admin else {
                 throw Abort(.forbidden, reason: "User doers not have required privileges")
             }
         })

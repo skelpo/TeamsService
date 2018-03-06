@@ -11,11 +11,6 @@ import Vapor
 
 // ==---------
 
-/// Gets the `status` value from a request's body.
-struct Status: Codable {
-    let status: Int
-}
-
 /// Get the `id` property from the request's body.
 struct UserID: Codable {
     let id: Int
