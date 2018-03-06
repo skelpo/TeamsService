@@ -15,6 +15,12 @@ public func configure(
     try services.register(FluentMySQLProvider())
     try services.register(SkelpoMiddleware.Provider())
     
+    // Create a router, register the application's routes with it,
+    // register the router with the application's services.
+    let router = EngineRouter.default()
+    try routes(router)
+    services.register(router, as: Router.self)
+    
     // Create the database config.
     var dbConfig = DatabaseConfig()
     
