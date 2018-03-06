@@ -1,6 +1,6 @@
 /// Represents the status a member can have in a team.
 /// The cases have a raw value type of `Int`.
-enum MemberStatus: Int, CustomStringConvertible {
+enum MemberStatus: Int, Codable, CustomStringConvertible {
     
     /// Defines that the user is an admin in the team.
     /// An admin can add and remove users, and delete the team.
