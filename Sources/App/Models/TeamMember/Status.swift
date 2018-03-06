@@ -7,7 +7,7 @@ enum MemberStatus: Int, Codable, CustomStringConvertible {
     /// This case has a raw value of '0'.
     case admin
     
-    /// Defines that the user is a standard team member without any amdin privlidges.
+    /// Defines that the user is a standard team member without any admin privlidges.
     /// This case has a raw value of '1'.
     case standard
     
