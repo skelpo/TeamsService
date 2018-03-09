@@ -1,11 +1,13 @@
-import FluentProvider
+import Vapor
+import FluentMySQL
 
 /// Represents a member for a team.
-final class TeamMember: Model {
+final class TeamMember: Content {
     
-    /// Used by Fluent to store metadata for the model in the database.
-    let storage: Storage = Storage()
-    
+    /// The ID row that holds the representation of the model on the database
+    /// This property is a varible because Fluent has to be able to mutate it
+    /// (from `nil` to `n`).
+    var id: Int?
     
     /// The ID of the user that model represents.
     let userID: Int
@@ -14,7 +16,7 @@ final class TeamMember: Model {
     let teamID: Int
     
     /// The status the member holds in the team ('admin' or 'standard').
-    let status: Int
+    let status: MemberStatus
     
     
     /// Creates a `TeamMember` with the neccesary information.
@@ -28,7 +30,7 @@ final class TeamMember: Model {
     init(userID: Int, teamID: Int, status: MemberStatus) {
         self.userID = userID
         self.teamID = teamID
-        self.status = status.rawValue
+        self.status = status
     }
     
     /// Creates a `TeamMember` with the neccesary information.
@@ -46,4 +48,26 @@ final class TeamMember: Model {
         }
         self.init(userID: userID, teamID: teamID, status: memberStatus)
     }
+    
+    /// Create a `QueryBuilder` that gets all the teams that the member is a part of.
+    func teams(queriedWith connectable: DatabaseConnectable) -> QueryBuilder<Team> {
+        return Team.query(on: connectable).join(field: \TeamMember.teamID).filter(joined: \TeamMember.userID == userID)
+    }
 }
+
+/// Conforms the `TeamMember` class to the `Model` protocol.
+/// When you conform a class to `Model` in an extention,
+/// the class must already conform to `Codable`.
+extension TeamMember: Model {
+    // The key path to the model's `id` property.
+    static var idKey: WritableKeyPath<TeamMember, Int?> {
+        return \.id
+    }
+    
+    /// The database type that is used to store the model.
+    typealias Database = MySQLDatabase
+}
+
+/// Conforms the `TeamMember` class to the `Model` protocol.
+/// This allows Fluent to create the table for the model in the database.
+extension TeamMember: Migration {}

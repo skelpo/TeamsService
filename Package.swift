@@ -9,21 +9,20 @@ let package = Package(
         .executable(name: "Run", targets: ["Run"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", .upToNextMajor(from: "2.1.0")),
-        .package(url: "https://github.com/vapor/fluent-provider.git", .upToNextMajor(from: "1.2.0")),
-        .package(url: "https://github.com/vapor/mysql-provider.git", .exact("2.0.0")),
-        .package(url: "https://github.com/vapor/jwt-provider.git", .exact("1.3.0")),
-        .package(url: "https://github.com/Skelpo/SkelpoMiddleware.git", .exact("1.3.1"))
+        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0-rc"),
+        .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0-rc"),
+        .package(url: "https://github.com/vapor/jwt.git", from: "3.0.0-rc"),
+        .package(url: "https://github.com/Skelpo/SkelpoMiddleware.git", from: "1.4.0-rc")
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "FluentProvider", "MySQLProvider", "JWTProvider", "SkelpoMiddleware"],
+        .target(name: "App", dependencies: ["Vapor", "FluentMySQL", "JWT", "SkelpoMiddleware"],
                 exclude: [
                     "Config",
                     "Public",
                     "Resources",
                 ]),
         .target(name: "Run", dependencies: ["App"]),
-        .testTarget(name: "AppTests", dependencies: ["App", "Testing"])
+        .testTarget(name: "AppTests", dependencies: ["App"])
     ]
 )
 

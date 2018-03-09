@@ -1,0 +1,31 @@
+{
+    "jwks_url": "https://s3.amazonaws.com/reviewsender/jwks.json"
+}
+
+{
+    "hash": {
+        "method": "sha256",
+        "encoding": "hex",
+        "key": "Sfjm0kLKfgjnbXP+MZT+2Hyrvb3OWFhAxjZSoEKNtFU="
+    },
+    
+    "cipher": {
+        "method": "aes256",
+        "encoding": "base64",
+        "key": "IUB7GoB1CYYPx2PZgNHRcZk8kYpjHcip7XPhei6cQFs="
+    }
+}
+
+{
+    "jwks-url": "https://s3.eu-central-1.amazonaws.com/lifeplus-content/jwks.json",
+    "keys": [
+             {
+             "kty": "RSA",
+             "e": "AQAB",
+             "use": "sig",
+             "kid": "reviewsender",
+             "alg": "RS256",
+             "n": "pZZr8diy9lzWx2gf6tvNz4zlesSZ0nc-dM4firemVCc9xMSDgmA3vVm1YTFbdpv45ezW0H5wR2ejdlpfQ3dIneRKOu69kwozHsZRrLDUQxG8y0VYQqoeeYzwKJ2nLYaBI-w0whlLF1eD94fbUf_YgmL6RtVjfavpLmKe3LvStRE8fsZ724U-wWVOnTc1fLo4aQWukogBxbAN0DsP3wPKfti6GOZ2ikav_3u6fNegEfQ_oNN7kr4BkK_dKjLAryoZCuvUJ4t2U_DMcpJp-tywCIYzxlNeXUbrqcjHa1Zodjp9wcL1a2uA-U93gu5dTsDl-_R6BqYtCZSiblDbQych8Q"
+             }
+             ]
+}
