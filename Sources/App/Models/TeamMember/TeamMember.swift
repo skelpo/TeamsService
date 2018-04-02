@@ -44,7 +44,7 @@ final class TeamMember: Content {
     /// - Note: This initializer will not save the member to the database.
     convenience init(userID: Int, teamID: Int, status: Int)throws {
         guard let memberStatus = MemberStatus(rawValue: status) else {
-            throw MemberError.undefinedMemberStatus(status)
+            throw MemberError(identifier: "undefinedMemberStatus", reason: "No member status exists with the int value '\(status)'", status: .notFound)
         }
         self.init(userID: userID, teamID: teamID, status: memberStatus)
     }
