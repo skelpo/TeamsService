@@ -56,18 +56,10 @@ final class TeamMember: Content {
 }
 
 /// Conforms the `TeamMember` class to the `Model` protocol.
-/// When you conform a class to `Model` in an extention,
-/// the class must already conform to `Codable`.
-extension TeamMember: Model {
-    // The key path to the model's `id` property.
-    static var idKey: WritableKeyPath<TeamMember, Int?> {
-        return \.id
-    }
-    
-    /// The database type that is used to store the model.
-    typealias Database = MySQLDatabase
-}
+/// The `MySQLModel` protocol requires a property `id` of type `Int`
+/// and that the `Database` type is equal to `MySQLDatabase`.
+extension TeamMember: MySQLModel {}
 
-/// Conforms the `TeamMember` class to the `Model` protocol.
+/// Conforms the `TeamMember` class to the `Migration` protocol.
 /// This allows Fluent to create the table for the model in the database.
 extension TeamMember: Migration {}
