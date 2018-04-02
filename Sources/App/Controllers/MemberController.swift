@@ -47,7 +47,7 @@ final class MemberController: RouteCollection {
             try TeamController.assertTeam(teamID, with: request)
             
             // Make sure that a team with the ID passed in exists.
-            return Team.find(teamID, on: request)
+            return try Team.find(teamID, on: request)
         }).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         ).flatMap(to: MemberData.self, { (team) in
@@ -68,7 +68,7 @@ final class MemberController: RouteCollection {
         let id = try request.parameter(Int.self)
 
         // Get the team with the ID from the route. If the user doesn't exist, abort.
-        return Team.find(id, on: request).unwrap(
+        return try Team.find(id, on: request).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(id)'")
         ).flatMap(to: [TeamMember].self, { (team) in
             
@@ -112,12 +112,12 @@ final class MemberController: RouteCollection {
         let userID = try request.parameter(Int.self)
 
         // Get the member from the database based on its user ID.
-        return TeamMember.query(on: request).filter(\TeamMember.userID == userID).first().unwrap(
+        return try TeamMember.query(on: request).filter(\TeamMember.userID == userID).first().unwrap(
             or: Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
         ).flatMap(to: [Team].self, { (member) in
             
             // Return all the member's teams
-            return member.teams(queriedWith: request).all()
+            return try member.teams(queriedWith: request).all()
         })
     }
     
@@ -136,7 +136,7 @@ final class MemberController: RouteCollection {
         try TeamController.assertTeam(teamID, with: request)
 
         // Get the team based on the ID.
-        let teamQuery = Team.find(teamID, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'"))
+        let teamQuery = try Team.find(teamID, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'"))
         var team: Team!
         
         return teamQuery.flatMap(to: TeamMember.self) { (queryResult) in

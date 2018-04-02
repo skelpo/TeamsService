@@ -25,7 +25,8 @@ public func configure(
     var dbConfig = DatabaseConfig()
     
     // Setup the connection to the database.
-    let database = MySQLDatabase(hostname: "localhost", user: "root", password: nil, database: "service_teams")
+    let config = MySQLDatabaseConfig(hostname: "localhost", port: 3306, username: "root", password: "password", database: "service_teams")
+    let database = MySQLDatabase(config: config)
     dbConfig.add(database: database, as: .mysql)
     services.register(dbConfig)
     

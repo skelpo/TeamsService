@@ -64,7 +64,7 @@ final class TeamController: RouteCollection {
         let ids = try request.teams()
 
         // Get all the teams that have an ID in the `ids` array and return them.
-        return Team.query(on: request).filter(\.id, in: ids).all()
+        return try Team.query(on: request).filter(\Team.id ~~ ids).all()
     }
     
     /// A route handler for getting a team with a specefied ID.
@@ -76,7 +76,7 @@ final class TeamController: RouteCollection {
         try TeamController.assertTeam(id, with: request)
         
         // Get the team from the database by it's ID and return it if it exists, otherwise abort.
-        return Team.find(id, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the id of '\(id)'"))
+        return try Team.find(id, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the id of '\(id)'"))
     }
     
     /// A route handler for deleting a team.
@@ -91,7 +91,7 @@ final class TeamController: RouteCollection {
             try TeamController.assertTeam(teamID, with: request)
             
             // Get team with the ID fetch from the route parameters.
-            return Team.find(teamID, on: request)
+            return try Team.find(teamID, on: request)
         }).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         ).flatMap(to: String.self, { (team) in
@@ -100,7 +100,7 @@ final class TeamController: RouteCollection {
             }
         
             // Delete the team and all its members.
-            TeamMember.query(on: request).filter(\TeamMember.teamID == id)
+            try TeamMember.query(on: request).filter(\TeamMember.teamID == id)
             return team.delete(on: request).transform(to: team.name)
         }).map(to: ModelDeletedResponse.self, { (name) in
             

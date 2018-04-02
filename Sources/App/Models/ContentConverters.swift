@@ -37,7 +37,7 @@ struct MemberData: Codable {
 struct ModelDeletedResponse: Content {
     
     /// The status code of the response. According to [RFC 7231](http://devdocs.io/http/rfc7231#section-6.3.5), this should be 204 (No Content) for a deletion.
-    let status: HTTPStatus = .noContent
+    let status: Int = Int(HTTPStatus.noContent.code)
     
     /// An optional human readable message, confirming a successful deletion.
     let message: String?

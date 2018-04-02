@@ -20,11 +20,11 @@ final class Team: Content {
     }
     
     /// Creates a `QueryBuilder` that gets all the members that belong to the team.
-    func members(queriedWith connectable: DatabaseConnectable)throws -> QueryBuilder<TeamMember> {
+    func members(queriedWith connectable: DatabaseConnectable)throws -> QueryBuilder<TeamMember, TeamMember> {
         guard let id = self.id else {
             throw TeamError.notSaved
         }
-        return TeamMember.query(on: connectable).filter(\TeamMember.teamID == id)
+        return try TeamMember.query(on: connectable).filter(\TeamMember.teamID == id)
     }
 }
 
