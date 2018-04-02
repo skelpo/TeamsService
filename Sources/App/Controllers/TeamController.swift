@@ -95,12 +95,9 @@ final class TeamController: RouteCollection {
         }).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         ).flatMap(to: String.self, { (team) in
-            guard let id = team.id else {
-                throw Abort(.internalServerError, reason: "Team found without an ID")
-            }
-        
+            
             // Delete the team and all its members.
-            try TeamMember.query(on: request).filter(\TeamMember.teamID == id)
+            try TeamMember.query(on: request).filter(\TeamMember.teamID == team.requireID())
             return team.delete(on: request).transform(to: team.name)
         }).map(to: ModelDeletedResponse.self, { (name) in
             
