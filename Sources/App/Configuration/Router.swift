@@ -4,14 +4,14 @@ import SkelpoMiddleware
 
 // Register the application's routes with the router.
 public func routes(_ router: Router)throws {
-    // TODO: - Add `JWTAuthenticationMiddleware` to api route group.
-    
+
     // Create a route group with middleware for:
     // 1. Converting errors to JSON
     // 2. Authenticating a user with a JWT token
     // 3. Getting the team IDs from the JWT payload
     let api = router.grouped(
         APIErrorMiddleware(),
+        JWTAuthenticationMiddleware<Payload>(),
         TeamIDMiddleware<Payload>()
     ).grouped(DynamicPathComponent.anything, "teams")
     
