@@ -146,6 +146,15 @@
         }
       },
       {
+        "package": "SkelpoMiddleware",
+        "repositoryURL": "https://github.com/Skelpo/SkelpoMiddleware",
+        "state": {
+          "branch": null,
+          "revision": "79ed92a865a6011406e5b0bc68fb454d93f6db81",
+          "version": "1.4.0-rc.6.2"
+        }
+      },
+      {
         "package": "swift-nio",
         "repositoryURL": "https://github.com/apple/swift-nio.git",
         "state": {

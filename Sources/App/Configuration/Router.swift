@@ -11,7 +11,7 @@ public func routes(_ router: Router)throws {
     // 3. Getting the team IDs from the JWT payload
     let api = router.grouped(
         APIErrorMiddleware(),
-        JWTAuthenticationMiddleware<Payload>(),
+        JWTVerificationMiddleware<Payload>(),
         TeamIDMiddleware<Payload>()
     ).grouped(any, "teams")
     
