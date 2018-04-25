@@ -12,10 +12,12 @@ let package = Package(
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0-rc"),
         .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0-rc"),
         .package(url: "https://github.com/vapor/jwt.git", from: "3.0.0-rc"),
-        .package(url: "https://github.com/Skelpo/SkelpoMiddleware.git", from: "1.4.0-rc")
+        .package(url: "https://github.com/Skelpo/JWTMiddleware", from: "0.3.1"),
+        .package(url: "https://github.com/Skelpo/APIErrorMiddleware", from: "0.1.0"),
+        .package(url: "https://github.com/Skelpo/JWTVapor", from: "0.7.1")
     ],
     targets: [
-        .target(name: "App", dependencies: ["Vapor", "FluentMySQL", "JWT", "SkelpoMiddleware"],
+        .target(name: "App", dependencies: ["Vapor", "FluentMySQL", "JWT", "JWTMiddleware", "APIErrorMiddleware", "JWTVapor"],
                 exclude: [
                     "Config",
                     "Public",
