@@ -1,6 +1,6 @@
 import Vapor
 import FluentMySQL
-import SkelpoMiddleware
+import VaporRequestStorage
 
 /// Configures the services that will be used in the application.
 public func configure(
@@ -12,8 +12,8 @@ public func configure(
     // Register the Fluent and FluentMySQL providers.
     // This configures migrations and the database connection.
     try services.register(FluentProvider())
+    try services.register(StorageProvider())
     try services.register(FluentMySQLProvider())
-    try services.register(SkelpoMiddleware.Provider())
     
     // Create a router, register the application's routes with it,
     // register the router with the application's services.
