@@ -13,7 +13,7 @@ public func routes(_ router: Router)throws {
         APIErrorMiddleware(),
         JWTAuthenticationMiddleware<Payload>(),
         TeamIDMiddleware<Payload>()
-    ).grouped(DynamicPathComponent.anything, "teams")
+    ).grouped(any, "teams")
     
     // Configure the routes in the `TeamController` and `MemberController` with the `api` route group.
     // This method requires the controllers to conform to the `RouteCollection` and `EmptyInitializable` protocols.
@@ -23,7 +23,7 @@ public func routes(_ router: Router)throws {
     // Create a route at the path `/teams/health` using a closure for the handler.
     // This route is used by the AWS E2C instance to check the health of the server.
     // We are registering the route here because we can't have it behind an authentication layer.
-    router.get(DynamicPathComponent.anything, "teams", "health") { request in
+    router.get(any, "teams", "health") { request in
         return "all good"
     }
 }
