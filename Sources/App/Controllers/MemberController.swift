@@ -38,7 +38,7 @@ final class MemberController: RouteCollection {
     /// Adds a new member to a team.
     func post(_ request: Request)throws -> Future<TeamMember> {
         // Get the ID of the team to add the user to from the route path parameter.
-        let teamID = try request.parameter(Int.self)
+        let teamID = try request.parameters.next(Int.self)
         
         // Verifiy that the user adding the member is a team admin.
         return try TeamController.assertAdmin(request).flatMap(to: Team?.self, { _ in
@@ -65,7 +65,7 @@ final class MemberController: RouteCollection {
     /// Gets all the members of a team.
     func get(_ request: Request)throws -> Future<[TeamMember]> {
         // Get the route parameter, which is the ID of the team we are getting the members from.
-        let id = try request.parameter(Int.self)
+        let id = try request.parameters.next(Int.self)
 
         // Get the team with the ID from the route. If the user doesn't exist, abort.
         return try Team.find(id, on: request).unwrap(
@@ -109,7 +109,7 @@ final class MemberController: RouteCollection {
     func teams(_ request: Request)throws -> Future<[Team]> {
 
         // Get the ID of the user to get the teams for from the route path parameter.
-        let userID = try request.parameter(Int.self)
+        let userID = try request.parameters.next(Int.self)
 
         // Get the member from the database based on its user ID.
         return try TeamMember.query(on: request).filter(\TeamMember.userID == userID).first().unwrap(
@@ -129,8 +129,8 @@ final class MemberController: RouteCollection {
     /// - parameter request: The request with the route parameters to get the member and team.
     func memberAndTeam(from request: Request)throws -> Future<(member: TeamMember, team: Team)> {
         // Get the team ID and member ID from the route parameters.
-        let teamID = try request.parameter(Int.self)
-        let memberID: Int? = try request.parameter(Int.self)
+        let teamID = try request.parameters.next(Int.self)
+        let memberID: Int? = try request.parameters.next(Int.self)
 
         // Verfiy that the member is part of the team that was pulled from the route parameters
         try TeamController.assertTeam(teamID, with: request)

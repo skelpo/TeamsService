@@ -70,7 +70,7 @@ final class TeamController: RouteCollection {
     /// A route handler for getting a team with a specefied ID.
     func getWithID(_ request: Request)throws -> Future<Team> {
         // Get the ID of the team to get from the route parameters.
-        let id = try request.parameter(Int.self)
+        let id = try request.parameters.next(Int.self)
 
         // Verify that the user is a member of the team they are getting.
         try TeamController.assertTeam(id, with: request)
@@ -82,7 +82,7 @@ final class TeamController: RouteCollection {
     /// A route handler for deleting a team.
     func delete(_ request: Request)throws -> Future<ModelDeletedResponse> {
         // Get the ID of the team to delete from the route parameters.
-        let teamID = try request.parameter(Int.self)
+        let teamID = try request.parameters.next(Int.self)
         
         // Verify that the user tying to delete the team is an admin member in the team.
         return try TeamController.assertAdmin(request).flatMap(to: Team?.self, { _ in
