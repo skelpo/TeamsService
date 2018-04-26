@@ -22,7 +22,7 @@ public func configure(
     services.register(router, as: Router.self)
     
     // Create the database config.
-    var dbConfig = DatabaseConfig()
+    var dbConfig = DatabasesConfig()
     
     // Setup the connection to the database.
     let config = MySQLDatabaseConfig(hostname: "localhost", port: 3306, username: "root", password: "password", database: "service_teams")
