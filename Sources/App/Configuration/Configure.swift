@@ -1,4 +1,5 @@
 import Vapor
+import JWTVapor
 import FluentMySQL
 import VaporRequestStorage
 
@@ -9,8 +10,22 @@ public func configure(
     _ services: inout Services
 ) throws {
     
-    // Register the Fluent and FluentMySQL providers.
+    // Configure the JWT signer used to verify and sign tokens.
+    // In this case, we are using RSA.
+    // We can sign tokens because we are using a private key
+    // (the `d` value must be used to create a private key)
+    let jwt = JWTProvider { (n) in
+        guard let d = Environment.get("REVIEWSENDER_JWT_D") else {
+            throw Abort(.internalServerError, reason: "Unable to find environment variable `REVIEWSENDER_JWT_D`", identifier: "envVarMissing")
+        }
+        
+        let header = JWTHeader(alg: "RS256", crit: ["exp", "aud"], kid: "reviewsender")
+        return try RSAService(n: n, e: "AQAB", d: d, header: header)
+    }
+    
+    // Register the Fluent, FluentMySQL, Storage, and JWT providers.
     // This configures migrations and the database connection.
+    try services.register(jwt)
     try services.register(FluentProvider())
     try services.register(StorageProvider())
     try services.register(FluentMySQLProvider())
