@@ -81,7 +81,7 @@ final class TeamController: RouteCollection {
     }
     
     /// A route handler for deleting a team.
-    func delete(_ request: Request)throws -> Future<ModelDeletedResponse> {
+    func delete(_ request: Request)throws -> Future<HTTPStatus> {
         // Get the ID of the team to delete from the route parameters.
         let teamID = try request.parameters.next(Int.self)
         
@@ -100,11 +100,7 @@ final class TeamController: RouteCollection {
             // Delete the team and all its members.
             try TeamMember.query(on: request).filter(\TeamMember.teamID == team.requireID())
             return team.delete(on: request).transform(to: team.name)
-        }).map(to: ModelDeletedResponse.self, { (name) in
-            
-            // Return a JSON object with a 204 status code and confirmation message.
-            return ModelDeletedResponse(message: "Team '\(name)' was deleted")
-        })
+        }).transform(to: .noContent)
     }
     
     // MARK: - Helpers
