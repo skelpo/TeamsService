@@ -19,7 +19,7 @@ final class TeamController: RouteCollection {
         router.get(Int.parameter, use: getWithID)
         
         // Create a route at the path `/teams/:int` using `.delete` as the route handler.
-        router.get(Int.parameter, use: delete)
+        router.delete(Int.parameter, use: delete)
     }
     
     // MARK: - Routes
