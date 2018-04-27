@@ -41,20 +41,24 @@ public func configure(
     // be used on all routes.
     var middlewares = MiddlewareConfig.default()
     middlewares.use(APIErrorMiddleware())
+    middlewares.use(SessionsMiddleware.self)
     services.register(middlewares)
     
     // Create the database config.
-    var dbConfig = DatabasesConfig()
+    var databases = DatabasesConfig()
     
     // Setup the connection to the database.
-    let config = MySQLDatabaseConfig(hostname: "localhost", port: 3306, username: "root", password: "password", database: "service_teams")
-    let database = MySQLDatabase(config: config)
-    dbConfig.add(database: database, as: .mysql)
-    services.register(dbConfig)
+    let mysqlCOnfig = MySQLDatabaseConfig(hostname: "localhost", port: 3306, username: "root", password: "password", database: "service_teams")
+    let database = MySQLDatabase(config: mysqlCOnfig)
+    databases.add(database: database, as: .mysql)
+    services.register(databases)
     
     // Add the models to the migration config so tables are create for them.
     var migirateConfig = MigrationConfig()
     migirateConfig.add(model: Team.self, database: .mysql)
     migirateConfig.add(model: TeamMember.self, database: .mysql)
     services.register(migirateConfig)
+    
+    // Tell the app which storage to use for storing sessions.
+    config.prefer(DictionaryKeyedCache.self, for: KeyedCache.self)
 }
