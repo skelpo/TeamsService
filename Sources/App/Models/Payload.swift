@@ -9,7 +9,7 @@ struct Payload: JWTPayload {
     let lastname: String
     let language: String
     let exp: Date
-    let iat: String
+    let iat: Date
     let email: String
     let id: Int
     let teamIDs: [Int]?
