@@ -109,11 +109,11 @@ final class MemberController: RouteCollection {
     func teams(_ request: Request)throws -> Future<[Team]> {
 
         // Get the ID of the user to get the teams for from the route path parameter.
-        let userID = try request.parameters.next(Int.self)
+        let id = try request.parameters.next(Int.self)
 
         // Get the member from the database based on its user ID.
-        return try TeamMember.query(on: request).filter(\TeamMember.userID == userID).first().unwrap(
-            or: Abort(.notFound, reason: "No entries found for user ID '\(userID)'")
+        return try TeamMember.query(on: request).filter(\TeamMember.id == id).first().unwrap(
+            or: Abort(.notFound, reason: "No entries found for user ID '\(id)'")
         ).flatMap(to: [Team].self, { (member) in
             
             // Return all the member's teams
