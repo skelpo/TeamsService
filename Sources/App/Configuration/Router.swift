@@ -10,9 +10,9 @@ public func routes(_ router: Router)throws {
     // 2. Authenticating a user with a JWT token
     // 3. Getting the team IDs from the JWT payload
     let api = router.grouped(
-        APIErrorMiddleware(),
+        TeamIDMiddleware<Payload>(),
         JWTVerificationMiddleware<Payload>(),
-        TeamIDMiddleware<Payload>()
+        APIErrorMiddleware()
     ).grouped(any, "teams")
     
     // Configure the routes in the `TeamController` and `MemberController` with the `api` route group.
