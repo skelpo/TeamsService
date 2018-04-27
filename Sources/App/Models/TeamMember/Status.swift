@@ -22,6 +22,14 @@ enum MemberStatus: Int, Codable, CustomStringConvertible {
     }
 }
 
+/// Conforms `MemberStatus` enum to `MySQLColumnDefinitionStaticRepresentable`.
+extension MemberStatus: MySQLColumnDefinitionStaticRepresentable {
+    
+    /// Tells Fluent what type of colunm to create in the database
+    /// for a property of the `MemberStatus` type.
+    static var mySQLColumnDefinition: MySQLColumnDefinition = .smallInt()
+}
+
 /// Conforms `MemberStatus` enum to `MySQLDataConvertible`.
 extension MemberStatus: MySQLDataConvertible {
     
