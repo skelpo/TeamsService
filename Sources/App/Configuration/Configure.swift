@@ -1,6 +1,7 @@
 import Vapor
 import JWTVapor
 import FluentMySQL
+import APIErrorMiddleware
 import VaporRequestStorage
 
 /// Configures the services that will be used in the application.
@@ -35,6 +36,12 @@ public func configure(
     let router = EngineRouter.default()
     try routes(router)
     services.register(router, as: Router.self)
+    
+    // Register the middlewares that will
+    // be used on all routes.
+    var middlewares = MiddlewareConfig.default()
+    middlewares.use(APIErrorMiddleware())
+    services.register(middlewares)
     
     // Create the database config.
     var dbConfig = DatabasesConfig()
