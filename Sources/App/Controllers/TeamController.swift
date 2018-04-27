@@ -1,6 +1,7 @@
 import Vapor
 import SkelpoMiddleware
 import Fluent
+import JSON
 
 /// The route controller for interacting with the teams.
 final class TeamController: RouteCollection {
@@ -129,8 +130,8 @@ final class TeamController: RouteCollection {
     /// - Parameter request: The request to get the status from.
     /// - Throws: `Abort(.forbidden, reason: "User doers not have required privileges")` if the status is missing or incorrect.
     static func assertAdmin(_ request: Request)throws -> Future<Void> {
-        return try request.content.decode([String: MemberStatus].self).map(to: Void.self, { (statuses) in
-            guard let status = statuses["status"] else {
+        return try request.content.decode(JSON.self).map(to: Void.self, { (body) in
+            guard let status = try MemberStatus(json: body["status"]) else {
                 throw Abort(.badRequest, reason: "No 'status' value was found")
             }
             guard status == .admin else {
