@@ -14,7 +14,7 @@ final class MemberController: RouteCollection {
         let team = router.grouped(Int.parameter, "members")
         
         // The route builder for routes with the path `/teams/members/...`
-        let user = router.grouped("member")
+        let user = router.grouped("members")
         
         // Create a route at the path `/teams/:int/members` using the `.post` method as the handler.
         team.post(use: post)
