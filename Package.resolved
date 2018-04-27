@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "APIErrorMiddleware",
-        "repositoryURL": "https://github.com/Skelpo/APIErrorMiddleware",
+        "repositoryURL": "https://github.com/skelpo/APIErrorMiddleware.git",
         "state": {
           "branch": null,
           "revision": "d6a595c757ce93029e6b6dea586e863768897500",
@@ -93,11 +93,11 @@
       },
       {
         "package": "JWTMiddleware",
-        "repositoryURL": "https://github.com/Skelpo/JWTMiddleware",
+        "repositoryURL": "https://github.com/skelpo/JWTMiddleware.git",
         "state": {
           "branch": null,
-          "revision": "be72694bdb0f91bc1280f4d3563250d21dafb829",
-          "version": "0.3.1"
+          "revision": "e4e2b53333bcdba3cc2e3da4de4dc4f81e635083",
+          "version": "0.4.1"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/Skelpo/SkelpoMiddleware",
         "state": {
           "branch": null,
-          "revision": "79ed92a865a6011406e5b0bc68fb454d93f6db81",
-          "version": "1.4.0-rc.6.2"
+          "revision": "f73b619d416bd7b2718ca6a7905be6e8a26dfd36",
+          "version": "1.4.0-rc.6.2.1"
         }
       },
       {
@@ -237,7 +237,7 @@
       },
       {
         "package": "VaporRequestStorage",
-        "repositoryURL": "https://github.com/skelpo/vapor-request-storage.git",
+        "repositoryURL": "https://github.com/skelpo/vapor-request-storage",
         "state": {
           "branch": null,
           "revision": "e581cf7f0a9b5f5f5310f681c8488b98c86bab83",

@@ -40,7 +40,7 @@ final class TeamController: RouteCollection {
             }
             
             // Get the ID of the user that made the request from the access token's payload
-            let user = try request.payload(as: UserID.self).id
+            let user = try request.payload(as: Payload.self).id
             
             // Store the new team ID with the rest of the IDs,
             // so the user doesn't have to re-authenticate to access the team

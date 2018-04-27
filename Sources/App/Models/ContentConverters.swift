@@ -11,11 +11,6 @@ import Vapor
 
 // ==---------
 
-/// Get the `id` property from the request's body.
-struct UserID: Codable {
-    let id: Int
-}
-
 /// Get the data from a request's body to create a `TeamMember` that is `admin`.
 /// Gets the `user_id` and `new_status` values.
 struct MemberData: Codable {
