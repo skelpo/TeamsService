@@ -9,12 +9,12 @@ let package = Package(
         .executable(name: "Run", targets: ["Run"])
     ],
     dependencies: [
-        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0-rc"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
         .package(url: "https://github.com/vapor/fluent-mysql.git", from: "3.0.0-rc"),
         .package(url: "https://github.com/vapor/jwt.git", from: "3.0.0-rc"),
-        .package(url: "https://github.com/Skelpo/SkelpoMiddleware", from: "1.4.0-rc.6.2"),
-        .package(url: "https://github.com/Skelpo/JWTVapor", from: "0.7.1"),
-        .package(url: "https://github.com/skelpo/JSON.git", from: "0.12.2")
+        .package(url: "https://github.com/Skelpo/SkelpoMiddleware", from: "1.4.0"),
+        .package(url: "https://github.com/Skelpo/JWTVapor", from: "0.9.0"),
+        .package(url: "https://github.com/skelpo/JSON.git", from: "0.13.0")
     ],
     targets: [
         .target(name: "App", dependencies: ["Vapor", "FluentMySQL", "JWT", "SkelpoMiddleware", "JWTVapor", "JSON"],
