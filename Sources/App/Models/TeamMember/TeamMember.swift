@@ -2,7 +2,7 @@ import Vapor
 import FluentMySQL
 
 /// Represents a member for a team.
-final class TeamMember: Content {
+final class TeamMember: Content, MySQLModel, Migration {
     
     /// The ID row that holds the representation of the model on the database
     /// This property is a varible because Fluent has to be able to mutate it
@@ -54,12 +54,3 @@ final class TeamMember: Content {
         return try Team.query(on: connectable).join(field: \TeamMember.teamID).filter(TeamMember.self, \.userID == userID)
     }
 }
-
-/// Conforms the `TeamMember` class to the `Model` protocol.
-/// The `MySQLModel` protocol requires a property `id` of type `Int`
-/// and that the `Database` type is equal to `MySQLDatabase`.
-extension TeamMember: MySQLModel {}
-
-/// Conforms the `TeamMember` class to the `Migration` protocol.
-/// This allows Fluent to create the table for the model in the database.
-extension TeamMember: Migration {}

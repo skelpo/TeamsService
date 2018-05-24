@@ -3,7 +3,7 @@ import FluentMySQL
 
 /// Represents any kind of team.
 /// A JWT payload contains the Team IDs that a user is a member of.
-final class Team: Content {
+final class Team: Content, MySQLModel, Migration {
     
     /// The name of the team.
     let name: String
@@ -24,12 +24,3 @@ final class Team: Content {
         return try TeamMember.query(on: connectable).filter(\TeamMember.teamID == self.requireID())
     }
 }
-
-/// Conforms the `Team` class to the `Model` protocol.
-/// The `MySQLModel` protocol requires a property `id` of type `Int`
-/// and that the `Database` type is equal to `MySQLDatabase`.
-extension Team: MySQLModel {}
-
-/// Conforms the `Team` class to the `Migration` protocol.
-/// This allows Fluent to create the table for the model in the database.
-extension Team: Migration {}
