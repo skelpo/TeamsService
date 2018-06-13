@@ -29,10 +29,10 @@ final class TeamController: RouteCollection {
     func post(_ request: Request)throws -> Future<TeamCreatedResponse> {
         
         // Decode the request's body to a `Team` object.
-        return try request.content.decode(Team.self).flatMap(to: Team.self, { (team) in
+        return try request.content.decode(Team.self).flatMap(to: Team.self) { team in
             // Save the team to the data base and continue to the next promise closure.
             return team.save(on: request)
-        }).flatMap(to: Team.self, { (team) in
+        }.flatMap(to: Team.self) { team in
             // Get the team's database ID.
             guard let teamId = team.id else {
                 
@@ -52,11 +52,11 @@ final class TeamController: RouteCollection {
             // Create and save the user as an admin member of the new team.
             let member = TeamMember(userID: user, teamID: teamId, status: .admin)
             return member.save(on: request).transform(to: team)
-        }).map(to: TeamCreatedResponse.self, { (team) in
+        }.map(to: TeamCreatedResponse.self) { team in
             
             // Return the team that was created and a human readable message requesting the client to re-authenticate.
             return TeamCreatedResponse(message: "You should re-authenticate so you can access the team you just created", team: team)
-        })
+        }
     }
     
     /// A route handler for getting all the teams a user belongs to.
@@ -86,21 +86,21 @@ final class TeamController: RouteCollection {
         let teamID = try request.parameters.next(Int.self)
         
         // Verify that the user tying to delete the team is an admin member in the team.
-        return try TeamController.assertAdmin(request).flatMap(to: Team?.self, { _ in
+        return try TeamController.assertAdmin(request).flatMap(to: Team?.self) {
             
             // Verify that the user is a member of the team they are trying to delete.
             try TeamController.assertTeam(teamID, with: request)
             
             // Get team with the ID fetch from the route parameters.
             return try Team.find(teamID, on: request)
-        }).unwrap(
+        }.unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
-        ).flatMap(to: String.self, { (team) in
+        ).flatMap(to: String.self) { team in
             
             // Delete the team and all its members.
             try TeamMember.query(on: request).filter(\TeamMember.teamID == team.requireID())
             return team.delete(on: request).transform(to: team.name)
-        }).transform(to: .noContent)
+        }.transform(to: .noContent)
     }
     
     // MARK: - Helpers
@@ -126,13 +126,13 @@ final class TeamController: RouteCollection {
     /// - Parameter request: The request to get the status from.
     /// - Throws: `Abort(.forbidden, reason: "User doers not have required privileges")` if the status is missing or incorrect.
     static func assertAdmin(_ request: Request)throws -> Future<Void> {
-        return try request.content.decode(JSON.self).map(to: Void.self, { (body) in
+        return try request.content.decode(JSON.self).map(to: Void.self) { body in
             guard let status = try MemberStatus(json: body["status"]) else {
                 throw Abort(.badRequest, reason: "No 'status' value was found")
             }
             guard status == .admin else {
                 throw Abort(.forbidden, reason: "User doers not have required privileges")
             }
-        })
+        }
     }
 }

@@ -41,25 +41,25 @@ final class MemberController: RouteCollection {
         let teamID = try request.parameters.next(Int.self)
         
         // Verifiy that the user adding the member is a team admin.
-        return try TeamController.assertAdmin(request).flatMap(to: Team?.self, { _ in
+        return try TeamController.assertAdmin(request).flatMap(to: Team?.self) { _ in
             
             // Verify that the user adding the member is part of the team they are adding the member to.
             try TeamController.assertTeam(teamID, with: request)
             
             // Make sure that a team with the ID passed in exists.
             return try Team.find(teamID, on: request)
-        }).unwrap(
+        }.unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
-        ).flatMap(to: MemberData.self, { (team) in
+        ).flatMap(to: MemberData.self) { team in
             
             // Get the information for creating the member from the request body.
             return try request.content.decode(MemberData.self)
-        }).flatMap(to: TeamMember.self, { (memberData) in
+        }.flatMap(to: TeamMember.self) { memberData in
             
             // Create the member and save it.
             let member = try TeamMember(userID: memberData.userId, teamID: teamID, status: memberData.newStatus)
             return member.save(on: request)
-        })
+        }
     }
     
     /// Gets all the members of a team.
@@ -70,33 +70,33 @@ final class MemberController: RouteCollection {
         // Get the team with the ID from the route. If the user doesn't exist, abort.
         return try Team.find(id, on: request).unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(id)'")
-        ).flatMap(to: [TeamMember].self, { (team) in
+        ).flatMap(to: [TeamMember].self) { team in
             
             // Get all the members belonging to a team and return them from the route.
             return try team.members(queriedWith: request).all()
-        })
+        }
     }
     
     /// Get a member for a team by its ID.
     func getById(_ request: Request)throws -> Future<TeamMember> {
-        return try memberAndTeam(from: request).map(to: TeamMember.self, { (parameters) in
+        return try memberAndTeam(from: request).map(to: TeamMember.self) { parameters in
             return parameters.member
-        })
+        }
     }
     
     /// Remove a member from a team.
     func delete(_ request: Request)throws -> Future<HTTPStatus> {
 
         // Verify that the user removing the member has an admin status in the team they are removing the member from.
-        return try TeamController.assertAdmin(request).flatMap(to: (member: TeamMember, team: Team).self, { _ in
+        return try TeamController.assertAdmin(request).flatMap(to: (member: TeamMember, team: Team).self) { _ in
             
             // Fetch the team and member objects with the IDs in the route parameters.
             return try self.memberAndTeam(from: request)
-        }).flatMap(to: Int.self, { (parameters) in
+        }.flatMap(to: Int.self) { parameters in
             
             // Get the member to remove and delete it from the database. Then unwrap the member's ID and return it from the future.
             return parameters.member.delete(on: request).transform(to: parameters.member.id).unwrap(or: Abort(.internalServerError))
-        }).transform(to: .noContent)
+        }.transform(to: .noContent)
     }
     
     // /users
@@ -110,11 +110,11 @@ final class MemberController: RouteCollection {
         // Get the member from the database based on its user ID.
         return try TeamMember.query(on: request).filter(\TeamMember.id == id).first().unwrap(
             or: Abort(.notFound, reason: "No entries found for user ID '\(id)'")
-        ).flatMap(to: [Team].self, { (member) in
+        ).flatMap(to: [Team].self) { member in
             
             // Return all the member's teams
             return try member.teams(queriedWith: request).all()
-        })
+        }
     }
     
     
@@ -135,7 +135,7 @@ final class MemberController: RouteCollection {
         let teamQuery = try Team.find(teamID, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'"))
         var team: Team!
         
-        return teamQuery.flatMap(to: TeamMember.self) { (queryResult) in
+        return teamQuery.flatMap(to: TeamMember.self) { queryResult in
             team = queryResult
             
             // Get the member from the team with the ID.
@@ -144,7 +144,7 @@ final class MemberController: RouteCollection {
                            .first()
                            .unwrap(or: Abort(.notFound, reason: "No member with the ID of '\(String(describing: memberID))' exists in the specified team")
             )
-        }.map(to: (member: TeamMember, team: Team).self) { (member) in
+        }.map(to: (member: TeamMember, team: Team).self) { member in
             
             // Return the member and team.
             return (member: member, team: team)
