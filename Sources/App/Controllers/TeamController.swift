@@ -65,7 +65,7 @@ final class TeamController: RouteCollection {
         let ids = try request.teams()
 
         // Get all the teams that have an ID in the `ids` array and return them.
-        return try Team.query(on: request).filter(\Team.id ~~ ids).all()
+        return Team.query(on: request).filter(\Team.id ~~ ids).all()
     }
     
     /// A route handler for getting a team with a specefied ID.
@@ -77,7 +77,7 @@ final class TeamController: RouteCollection {
         try TeamController.assertTeam(id, with: request)
         
         // Get the team from the database by it's ID and return it if it exists, otherwise abort.
-        return try Team.find(id, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the id of '\(id)'"))
+        return Team.find(id, on: request).unwrap(or: Abort(.notFound, reason: "No team exists with the id of '\(id)'"))
     }
     
     /// A route handler for deleting a team.
@@ -92,7 +92,7 @@ final class TeamController: RouteCollection {
             try TeamController.assertTeam(teamID, with: request)
             
             // Get team with the ID fetch from the route parameters.
-            return try Team.find(teamID, on: request)
+            return Team.find(teamID, on: request)
         }.unwrap(
             or: Abort(.notFound, reason: "No team exists with the ID of '\(teamID)'")
         ).flatMap(to: String.self) { team in

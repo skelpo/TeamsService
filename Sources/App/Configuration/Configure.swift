@@ -40,7 +40,7 @@ public func configure(
     // Register the middlewares that will
     // be used on all routes.
     var middlewares = MiddlewareConfig.default()
-    middlewares.use(APIErrorMiddleware())
+    middlewares.use(APIErrorMiddleware.self)
     middlewares.use(SessionsMiddleware.self)
     services.register(middlewares)
     

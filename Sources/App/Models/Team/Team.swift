@@ -20,7 +20,7 @@ final class Team: Content, MySQLModel, Migration {
     }
     
     /// Creates a `QueryBuilder` that gets all the members that belong to the team.
-    func members(queriedWith connectable: DatabaseConnectable)throws -> QueryBuilder<TeamMember, TeamMember> {
+    func members(queriedWith connectable: DatabaseConnectable)throws -> QueryBuilder<TeamMember.Database, TeamMember> {
         return try TeamMember.query(on: connectable).filter(\TeamMember.teamID == self.requireID())
     }
 }

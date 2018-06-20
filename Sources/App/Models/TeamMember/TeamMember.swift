@@ -50,7 +50,7 @@ final class TeamMember: Content, MySQLModel, Migration {
     }
     
     /// Create a `QueryBuilder` that gets all the teams that the member is a part of.
-    func teams(queriedWith connectable: DatabaseConnectable)throws -> QueryBuilder<Team, Team> {
-        return try Team.query(on: connectable).join(field: \TeamMember.teamID).filter(TeamMember.self, \.userID == userID)
+    func teams(queriedWith connectable: DatabaseConnectable) -> QueryBuilder<Team.Database, Team> {
+        return Team.query(on: connectable).join(\TeamMember.teamID, to: \Team.id).filter(\TeamMember.userID == userID)
     }
 }
