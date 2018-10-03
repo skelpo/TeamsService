@@ -15,11 +15,7 @@ public func configure(
     // In this case, we are using RSA.
     // We can sign tokens because we are using a private key
     // (the `d` value must be used to create a private key)
-    let jwt = JWTProvider { (n) in
-        guard let d = Environment.get("REVIEWSENDER_JWT_D") else {
-            throw Abort(.internalServerError, reason: "Unable to find environment variable `REVIEWSENDER_JWT_D`", identifier: "envVarMissing")
-        }
-        
+    let jwt = JWTProvider { n, d -> RSAService in
         let header = JWTHeader(alg: "RS256", crit: ["exp", "aud"], kid: "reviewsender")
         return try RSAService(n: n, e: "AQAB", d: d, header: header)
     }

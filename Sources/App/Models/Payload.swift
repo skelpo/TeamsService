@@ -14,7 +14,7 @@ struct Payload: JWTPayload {
     let id: Int
     let teamIDs: [Int]?
     
-    func verify() throws {
-        try ExpirationClaim(value: exp).verify()
+    func verify(using signer: JWTSigner) throws {
+        try ExpirationClaim(value: exp).verifyNotExpired()
     }
 }
